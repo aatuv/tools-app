@@ -9,12 +9,12 @@ import Forecast from './Forecast.js'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        maxWidth: 450,
+        maxWidth: 500,
         maxHeight: 600
     },
     main: {
         padding: theme.spacing(2),
-        maxWidth: 500,
+        maxWidth: 450,
         backgroundColor: grey[700],
         color: grey[100]
     },
@@ -32,7 +32,7 @@ function dailyForecast(list, today) {
     for (let i = 0; i < list.length; i++) {
         let date = new Date(list[i].dt * 1000);
         if (date.getDate() > new Date(today * 1000).getDate()) {
-            if (date.getHours() == 11) {
+            if (date.getHours() === 11) {
                 daily.push(list[i]);
             }
         }
@@ -40,7 +40,7 @@ function dailyForecast(list, today) {
     return daily;
 }
 
-function Weather({ forecastData, weatherData }) {
+function Weather({ forecastData, weatherData, handlePopoverClose, handlePopoverOpen, anchorEl, currentId }) {
     const classes = useStyles();
     const daily = dailyForecast(forecastData.list, weatherData.dt);
     const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -57,7 +57,7 @@ function Weather({ forecastData, weatherData }) {
                         <Paper className={classes.paper}><CurrentWeather weather={weatherData} options={options} weekdays={weekdays} /></Paper>
                     </Grid>
                     <Grid item xs={12}>
-                        <Forecast forecast={daily} options={options} weekdays={weekdays} />
+                        <Forecast forecast={daily} options={options} weekdays={weekdays} handlePopoverClose={handlePopoverClose} handlePopoverOpen={handlePopoverOpen} anchorEl={anchorEl} currentId={currentId} />
                     </Grid>
                 </Grid>
             </Paper>
