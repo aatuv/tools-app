@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
         pointerEvents: 'none'
     },
     card: {
-        minWidth: 200,
+        minWidth: 300,
         minHeight: 300,
         backgroundColor: grey[800],
         color: grey[100]

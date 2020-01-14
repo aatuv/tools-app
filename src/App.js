@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import Weather from './components/Weather.js'
+import React, { useState, useEffect, Fragment } from 'react'
+import Weather from './components/weatherApp/Weather.js'
+import Timer from './components/timerApp/Timer.js'
 import Axios from 'axios'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from '@material-ui/core/Container'
+import { Grid, CircularProgress } from '@material-ui/core'
 
 function App() {
   const [forecastData, setForecast] = useState({ city: { coord: {} }, list: [{ main: {}, weather: [{}], clouds: {}, wind: {}, sys: {} }] });
@@ -10,7 +10,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentId, setCurrentId] = useState(0);
-
+  const [timerMs, setTimerMs] = useState(0);
+  const [timerOn, setTimerOn] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -49,7 +50,7 @@ function App() {
   }, []);
 
 
-  function handlePopoverOpen(target, targetId) {
+  const handlePopoverOpen = (target, targetId) => {
     setAnchorEl(target);
     setCurrentId(targetId);
   };
@@ -59,10 +60,47 @@ function App() {
     setCurrentId(0);
   };
 
+  const handleTimerOn = (h, m, s) => {
+    let hMs = h * 3600000;
+    let mMs = m * 60000;
+    let sMs = s * 1000;
+    setTimerMs(hMs + mMs + sMs);
+    setTimerOn(true);
+  }
+  const handleTimerOff = () => {
+    setTimerOn(false);
+  }
+
+  function gridRow() {
+    return (
+      <Fragment>
+        <Grid item xs={4}>
+          <Weather
+            forecastData={forecastData}
+            weatherData={weatherData}
+            handlePopoverClose={handlePopoverClose}
+            handlePopoverOpen={handlePopoverOpen}
+            anchorEl={anchorEl}
+            currentId={currentId}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <Timer handleTimerOn={handleTimerOn} handleTimerOff={handleTimerOff}/>
+        </Grid>
+        <Grid item xs={4}>
+        </Grid>
+      </Fragment>
+    )
+  }
+
   return isLoading ? <CircularProgress /> :
-    <Container fluid maxWidth="sm">
-      <Weather forecastData={forecastData} weatherData={weatherData} handlePopoverClose={handlePopoverClose} handlePopoverOpen={handlePopoverOpen} anchorEl={anchorEl} currentId={currentId} />
-    </Container>
+    <Grid container spacing={1}>
+      <Grid container item xs={12} spacing={1}>
+        {gridRow()}
+      </Grid>
+      <Grid container item xs={12} spacing={1}>
+      </Grid>
+    </Grid>
 }
 
 export default App;

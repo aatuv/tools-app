@@ -8,13 +8,9 @@ import Paper from '@material-ui/core/Paper'
 import Forecast from './Forecast.js'
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        maxWidth: 500,
-        maxHeight: 600
-    },
+
     main: {
         padding: theme.spacing(2),
-        maxWidth: 450,
         backgroundColor: grey[700],
         color: grey[100]
     },
