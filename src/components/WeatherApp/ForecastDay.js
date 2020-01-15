@@ -67,7 +67,6 @@ export default function ForecastDay({ weather, options, weekdays, handlePopoverC
                 className={classes.popover}
                 open={open}
                 anchorEl={anchorEl}
-                currentId={currentId}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'center',

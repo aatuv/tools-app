@@ -7,7 +7,13 @@ function Forecast({ forecast, weekdays, handlePopoverClose, handlePopoverOpen, a
         <Grid container spacing={1} alignItems="stretch">
             {forecast.map(day => (
                 <Grid item xs key={day.dt} style={{ heigth: '100%' }}>
-                    <ForecastDay weather={day} weekdays={weekdays} handlePopoverClose={handlePopoverClose} handlePopoverOpen={handlePopoverOpen} anchorEl={anchorEl} currentId={currentId} />
+                    <ForecastDay 
+                    weather={day} 
+                    weekdays={weekdays} 
+                    handlePopoverClose={handlePopoverClose} 
+                    handlePopoverOpen={handlePopoverOpen} 
+                    anchorEl={anchorEl} 
+                    currentId={currentId} />
                 </Grid>
             ))}
         </Grid>

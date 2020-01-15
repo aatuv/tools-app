@@ -50,10 +50,24 @@ function Weather({ forecastData, weatherData, handlePopoverClose, handlePopoverO
                         <City city={forecastData.city} />
                     </Grid>
                     <Grid item xs={12}>
-                        <Paper className={classes.paper}><CurrentWeather weather={weatherData} options={options} weekdays={weekdays} /></Paper>
+                        <Paper className={classes.paper}>
+                            <CurrentWeather
+                                weather={weatherData}
+                                options={options}
+                                weekdays={weekdays}
+                            />
+                        </Paper>
                     </Grid>
                     <Grid item xs={12}>
-                        <Forecast forecast={daily} options={options} weekdays={weekdays} handlePopoverClose={handlePopoverClose} handlePopoverOpen={handlePopoverOpen} anchorEl={anchorEl} currentId={currentId} />
+                        <Forecast
+                            forecast={daily}
+                            options={options}
+                            weekdays={weekdays}
+                            handlePopoverClose={handlePopoverClose}
+                            handlePopoverOpen={handlePopoverOpen}
+                            anchorEl={anchorEl}
+                            currentId={currentId}
+                        />
                     </Grid>
                 </Grid>
             </Paper>
