@@ -10,8 +10,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentId, setCurrentId] = useState(0);
-  const [timerMs, setTimerMs] = useState(0);
-  const [timerOn, setTimerOn] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -60,17 +58,6 @@ function App() {
     setCurrentId(0);
   };
 
-  const handleTimerOn = (h, m, s) => {
-    let hMs = h * 3600000;
-    let mMs = m * 60000;
-    let sMs = s * 1000;
-    setTimerMs(hMs + mMs + sMs);
-    setTimerOn(true);
-  }
-  const handleTimerOff = () => {
-    setTimerOn(false);
-  }
-
   function gridRow() {
     return (
       <Fragment>
@@ -85,7 +72,7 @@ function App() {
           />
         </Grid>
         <Grid item xs={4}>
-          <Timer handleTimerOn={handleTimerOn} handleTimerOff={handleTimerOff}/>
+          <Timer />
         </Grid>
         <Grid item xs={4}>
         </Grid>
