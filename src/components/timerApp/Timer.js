@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Box, Button, TextField, Typography } from '@material-ui/core'
-import { Pause, PlayArrow, Stop, SettingsInputAntenna } from '@material-ui/icons'
+import { Pause, PlayArrow, Stop } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 
 function Timer() {
+    const initialMount = useRef(true);
     const [hours, setHours] = useState("0");
     const [minutes, setMinutes] = useState("0");
     const [seconds, setSeconds] = useState("0");
     const [timer, setTimer] = useState(0);
-    const [timerMs, setTimerMs] = useState(0);
     const [timerOn, setTimerOn] = useState(false);
 
     const useStyles = makeStyles(theme => ({
@@ -17,24 +17,54 @@ function Timer() {
         main: {
             display: 'flex',
             flexWrap: 'wrap',
+            flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            padding: '20px'
+        },
+        buttons: {
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            padding: '10px'
         },
         input: {
             display: 'table-cell'
         }
     }));
 
-    const putTimerOn = () => {
-    }
+    useEffect(() => {
+        if (initialMount.current) {
+            initialMount.current = false;
+        } else {
+            if (timerOn === false) {
+                setTimerOn(true);
+            }
+            const t = setInterval(() => {
+                if (timer === 0) {
+                    setTimerOn(false);
+                    clearInterval(this);
+                } else {
+                setTimer(timer - 100);
+                }
+            }, 100);
+            return () => {
+                clearInterval(t);
+            }
+        }
+    }, [timer]);
 
-    const handleTimerOn = () => {
-        let hMs = parseInt(hours) * 3600000;
-        let mMs = parseInt(minutes) * 60000;
-        let sMs = parseInt(seconds) * 1000;
-        setTimer(hMs + mMs + sMs);
-        setTimerOn(true);
+    const calculateTime = () => {
+        let hMs = (parseInt(hours) * 3600000);
+        let mMs = (parseInt(minutes) * 60000);
+        let sMs = (parseInt(seconds) * 1000);
+        
+        return hMs + mMs + sMs;
     }
+    const handleTimerOn = () => {
+        setTimer(calculateTime()); 
+    }
+    
     const handleTimerOff = () => {
         setTimerOn(false);
     }
@@ -79,7 +109,6 @@ function Timer() {
             default:
                 break;
         }
-        console.log(combined);
         if (combined >= 86400) {
             setHours("23");
             setMinutes("59");
@@ -93,8 +122,22 @@ function Timer() {
         return target;
     }
 
-    const returnTime = () => {
+    const qsecs = () => {
+        let qsecs = (timer / (100) % 10);
+        return qsecs;
+    }
 
+    const secs = () => {
+        let secs = ('0' + Math.floor((timer / (1000))) % 60).slice(-2);
+        return secs;
+    }
+    const mins = () => {
+        let mins = ('0' + Math.floor((timer / (1000 * 60)))).slice(-2);
+        return mins; 
+    }
+    const hrs = () => {
+        let hrs = ('0' + Math.floor((timer / (1000 * 60 * 60)))).slice(-2);
+        return hrs; 
     }
 
     const classes = useStyles();
@@ -102,11 +145,9 @@ function Timer() {
     return timerOn ?
         <Box className={classes.main}>
             <Box>
-                <Typography id="h">{returnTime}:</Typography>
-                <Typography id="m">{returnTime}:</Typography>
-                <Typography id="s">{returnTime}</Typography>
+                <Typography variant="h3">{`${hrs()}:${mins()}:${secs()}:${qsecs()}`}</Typography>
             </Box>
-            <Box className={classes.main}>
+            <Box className={classes.buttons}>
                 <Button variant="outlined"><Stop /></Button>
                 <Button variant="outlined"><Pause /></Button>
                 <Button variant="outlined"><PlayArrow /></Button>
@@ -145,11 +186,11 @@ function Timer() {
                     label="seconds"
                     variant="outlined"
                 />
-            </Box>
-            <Box className={classes.main}>
+            <Box className={classes.buttons}>
                 <Button variant="outlined"><Stop /></Button>
                 <Button variant="outlined"><Pause /></Button>
                 <Button variant="outlined" onClick={handleTimerOn}><PlayArrow /></Button>
+            </Box>
             </Box>
         </Box>
 }
