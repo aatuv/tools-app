@@ -44,6 +44,8 @@ function windDirection(deg) {
             return 'NW';
         case (deg > 326.25 && deg < 348.75):
             return 'NNW';
+        default:
+            break;
     }
 }
 

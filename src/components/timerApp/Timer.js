@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
+import * as workerTimers from 'worker-timers'
+import soundFile from '../../assets/mgs.m4a'
 import { Grid, Box, Paper, Button, TextField, Typography, Modal } from '@material-ui/core'
 import { Pause, PlayArrow, Stop } from '@material-ui/icons'
 import blue from '@material-ui/core/colors/blue'
 import { makeStyles } from '@material-ui/core/styles'
 
 function Timer() {
-    const alertSound = new Audio('https://dl.dropbox.com/s/49mrgqapjue1xxz/mgs_alert.mp3');
+    const [alertSound, setAlertSound] = useState(new Audio(soundFile));
     const initialMount = useRef(true);
     const [hours, setHours] = useState("0");
     const [minutes, setMinutes] = useState("0");
@@ -20,24 +22,28 @@ function Timer() {
         if (initialMount.current) { // prevent on initial load
             initialMount.current = false;
         } else {
-            const t = setInterval(() => {
-                if (setTimerOn === false) { // if timer is stopped
-                    clearInterval(this);
-                }
-                if (timer === 0) { // if timer ran out
-                    setTimerOn(false);
-                    clearInterval(this);
-                    setAlert(true);
+            let current = Date.now();
+            const t = workerTimers.setInterval(() => {
+                if (timerOn === false) { // if timer is stopped
+                    workerTimers.clearInterval(t);
                 } else {
-                    if (timerPause === true) { // if timer is paused, don't change timer amount
-                        setTimer(timer);
+                    if (timer <= 0) { // if timer ran out
+                        alertOn();
+                        handleTimerOff();
+                        workerTimers.clearInterval(t);
                     } else {
-                        setTimer(timer - 100);
+                        if (timerPause === true) { // if timer is paused, don't change timer amount
+                            setTimer(timer);
+                        } else {
+                            let elapsed = Date.now() - current;
+                            console.log(elapsed);
+                            setTimer(timer - elapsed);
+                        }
                     }
                 }
             }, 100);
             return () => {
-                clearInterval(t);
+                workerTimers.clearInterval(t);
             }
         }
     }, [timer]);
@@ -67,15 +73,11 @@ function Timer() {
     }, [timerPause])
 
     // handle alert sound
-/*     useEffect(() => {
-        if (initialMount.current) {
-            initialMount.current = false;
-        } else {
-            if (alert === true) {
-                playAlert();
-            }
+    useEffect(() => {
+        if (alert) {
+            playAlertSound();
         }
-    }, [alert]) */
+    }, [alert])
 
     // return time in milliseconds
     const calculateTime = () => {
@@ -92,10 +94,16 @@ function Timer() {
 
     const alertOff = () => {
         setAlert(false);
+        stopAlertSound();
     }
 
-    const playAlert = () => {
+    const playAlertSound = () => {
         alertSound.play();
+    }
+
+    const stopAlertSound = () => {
+        alertSound.pause();
+        alertSound.currentTime = 0;
     }
     // * 
     //handle logic related to timer buttons
@@ -113,7 +121,6 @@ function Timer() {
     }
 
     const handleTimerOff = () => {
-        console.log("handleTimerOff");
         setTimerOn(false);
         setTimer(0);
         setHours("0");
@@ -190,7 +197,7 @@ function Timer() {
     // *
     // return time left in timer in readable form
     const qsecs = () => {
-        let qsecs = (timer / (100) % 10);
+        let qsecs = Math.floor(timer / (100) % 10);
         return qsecs;
     }
 
@@ -213,6 +220,7 @@ function Timer() {
             textAlign: 'center'
         },
         main: {
+            minHeight: '100%',
             padding: theme.spacing(2),
             backgroundColor: blue[700],
             color: blue[50]
@@ -241,10 +249,15 @@ function Timer() {
             backgroundColor: blue[50]
         },
         modal: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-evenly',
             position: 'absolute',
-            width: 400,
+            top: '30%',
+            left: '30%',
+            width: '20%',
+            height: '20%',
             backgroundColor: theme.palette.background.paper,
-            border: '2px solid #000',
             boxShadow: theme.shadows[5],
             padding: theme.spacing(2, 4, 3),
         }
@@ -329,12 +342,12 @@ function Timer() {
                     </Paper>
                 </Grid>
             </Grid>
-            <Modal aria-labelledby="simple-modal-title" open={alert} onClose={() => alertOff()}>
+            <Modal aria-labelledby="simple-modal-title" open={alert}>
                 <div className={classes.modal}>
-                    <h2 id="simple-modal-title">Text in a modal</h2>
-                    <p id="simple-modal-description">
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                        </p>
+                    <Typography variant="h4">Alarm!</Typography>
+                    <Button onClick={alertOff} variant="outlined" color="primary">
+                        OK
+                    </Button>
                 </div>
             </Modal>
         </Paper>
