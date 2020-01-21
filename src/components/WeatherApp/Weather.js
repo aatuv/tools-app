@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
 import City from './City.js'
 import { makeStyles } from '@material-ui/core/styles'
-import grey from '@material-ui/core/colors/grey'
+import blue from '@material-ui/core/colors/blue'
 import CurrentWeather from './CurrentWeather.js'
 import { Grid, Paper, CircularProgress } from '@material-ui/core'
 import Forecast from './Forecast.js'
@@ -81,12 +81,12 @@ function Weather() {
     main: {
       minHeight: '100%',
       padding: theme.spacing(2),
-      backgroundColor: grey[700],
-      color: grey[100]
+      backgroundColor: blue[700],
+      color: blue[50]
     },
     paper: {
-      backgroundColor: grey[600],
-      color: grey[50]
+      backgroundColor: blue[300],
+      color: '#ffffff',
     },
     i: {
       display: 'inline-block',

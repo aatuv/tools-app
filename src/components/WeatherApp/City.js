@@ -1,7 +1,7 @@
 import React from 'react'
 import { Paper, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import grey from '@material-ui/core/colors/grey'
+import blue from '@material-ui/core/colors/blue'
 import MyLocationIcon from '@material-ui/icons/MyLocation'
 
 
@@ -16,8 +16,8 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         padding: theme.spacing(2),
-        backgroundColor: grey[600],
-        color: grey[50]
+        backgroundColor: blue[300],
+        color: '#ffffff',
     }
 }));
 
@@ -34,12 +34,12 @@ function City({ city }) {
             spacing={2}
             >
                 <Grid item xs={12}>
-                    <Typography gutterBottom variant="h5" align="center">
+                    <Typography gutterBottom variant="h4" align="center">
                         {`${city.name}, ${city.country}`}
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography gutterBottom variant="body2" align="center" >
+                    <Typography gutterBottom variant="h6" align="center" >
                         <MyLocationIcon style={{ fontSize: 10, align: 'center' }} />
                         {` ${city.coord.lat}, ${city.coord.lon}`}
                     </Typography>

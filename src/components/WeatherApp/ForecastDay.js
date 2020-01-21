@@ -6,12 +6,12 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
-import grey from '@material-ui/core/colors/grey'
+import blue from '@material-ui/core/colors/blue'
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        backgroundColor: grey[600],
-        color: grey[50]
+        backgroundColor: blue[300],
+        color: '#ffffff',
     },
     popover: {
         pointerEvents: 'none'
@@ -19,8 +19,8 @@ const useStyles = makeStyles(theme => ({
     card: {
         minWidth: 300,
         minHeight: 300,
-        backgroundColor: grey[800],
-        color: grey[100]
+        backgroundColor: blue[500],
+        color: '#ffffff',
       }
 }));
 export default function ForecastDay({ weather, options, weekdays, handlePopoverClose, handlePopoverOpen, anchorEl, currentId }) {

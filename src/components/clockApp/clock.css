@@ -1,0 +1,34 @@
+.clock {
+    position: absolute;
+    border: .5em solid #ffffff;
+    border-radius: 50%;
+    height: 18em;
+    width: 18em;
+    min-width: 18em;
+    min-width: 18em;
+    background-color: #42a5f5;
+    background-image: url(../../assets/clock-background.svg);
+    background-size: 18em 18em;
+}
+
+.clock:before {
+    content: '';
+    position: absolute;
+    top: calc(50% - .3em);
+    left: 50%;
+    width: 35%;
+    height: .3em;
+    background: #ffffff;
+    border-radius: .3em;
+    animation: animate 4s linear infinite;
+    transform-origin: left;
+}
+
+@keyframes animate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

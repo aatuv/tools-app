@@ -346,7 +346,7 @@ function Timer() {
                 <div className={classes.modal}>
                     <Typography variant="h4">Alarm!</Typography>
                     <Button onClick={alertOff} variant="outlined" color="primary">
-                        OK
+                        Close
                     </Button>
                 </div>
             </Modal>
