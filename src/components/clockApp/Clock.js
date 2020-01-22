@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useSpring, animated, useTransition } from 'react-spring'
+import { useSpring, animated, useTransition, config } from 'react-spring'
+import * as workerTimers from 'worker-timers'
 import { Paper, Grid, Typography } from '@material-ui/core'
 import blue from '@material-ui/core/colors/blue'
 import { makeStyles } from '@material-ui/core/styles'
@@ -8,17 +9,43 @@ import './clock.css'
 
 function Clock() {
     const [time, setTime] = useState(Date.now());
-    const props = useSpring({
+
+    const secHand = useSpring({ // handle movement of seconds hand
+        config: config.wobbly,
+        from: { transform: 'rotate(-90deg)' },
+        to: async next => {
+            let initial = -90 + new Date(time).getSeconds() * 6;
+            await next({ transform: `rotate(${initial}deg)` });
+        }
+    });
+    const minHand = useSpring({ // handle movement of minutes hand 
+        config: config.wobbly,
+        from: { transform: 'rotate(-90deg)' },
+        to: async next => {
+            let initial = -90 + new Date(time).getMinutes() * 6;
+            await next({ transform: `rotate(${initial}deg)` });
+            initial += 6;
+        }
+    });
+    const hrHand = useSpring({ // handle movement of hours hand
+        config: config.wobbly,
+        from: { transform: 'rotate(-90deg)' },
+        to: async next => {
+            let initial = -90 + new Date(time).getHours() * 6;
+            await next({ transform: `rotate(${initial}deg)` });
+            initial += 6;
+        }
     });
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
     const weekdays = ['Sunday', 'Monday', 'Tuesday',
         'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     useEffect(() => {
-        setInterval(() => {
+        const t = workerTimers.setInterval(() => { // update time every second
             setTime(Date.now());
         }, 1000);
-    }, [time, setTime]);
+        return () => workerTimers.clearInterval(t);
+    }, [time]);
 
     const useStyles = makeStyles(theme => ({
         main: {
@@ -68,7 +95,10 @@ function Clock() {
                         <Typography className={classes.typography} variant="h3">{new Date(time).toLocaleTimeString('de')}</Typography>
                     </Grid>
                     <Grid className={classes.item} item xs>
-                        <animated.div className="clock" style={props}>
+                        <animated.div className="clock">
+                            <animated.div className="seconds" style={secHand} key={time}></animated.div>
+                            <animated.div className="minutes" style={minHand} key={time}></animated.div>
+                            <animated.div className="hours" style={hrHand} key={time}></animated.div>
                         </animated.div>
                     </Grid>
                 </Grid>
