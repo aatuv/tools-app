@@ -20,7 +20,6 @@
     height: .2em;
     background: #ffffff;
     border-radius: .2em;
-    transform: rotate(-90deg);
     transform-origin: left;
 }
 .minutes {
@@ -32,7 +31,6 @@
     height: .3em;
     background: #ffffff;
     border-radius: .3em;
-    transform: rotate(-270deg);
     transform-origin: left;
 }
 .hours {
@@ -44,7 +42,6 @@
     height: .4em;
     background: #ffffff;
     border-radius: .4em;
-    transform: rotate(-270deg);
     transform-origin: left;
 }
 
