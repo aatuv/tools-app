@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useSpring, animated, useTransition, config } from 'react-spring'
+import { useSpring, animated, config } from 'react-spring'
 import * as workerTimers from 'worker-timers'
 import { Paper, Grid, Typography } from '@material-ui/core'
 import blue from '@material-ui/core/colors/blue'
@@ -61,8 +61,6 @@ function Clock() {
     const useStyles = makeStyles(theme => ({
         main: {
             display: 'flex',
-            direction: 'column',
-            alignItems: 'stretch',
             justifyContent: 'center',
             minHeight: '100%',
             padding: theme.spacing(2),

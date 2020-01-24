@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import Weather from './components/weatherApp/Weather.js'
 import Timer from './components/timerApp/Timer.js'
 import Clock from './components/clockApp/Clock.js'
+import TrainingSchedule from './components/trainingScheduleApp/TrainingSchedule.js'
 import { Grid } from '@material-ui/core'
 import blue from '@material-ui/core/colors/blue'
 
@@ -28,6 +29,7 @@ function App() {
         {gridRow()}
       </Grid>
       <Grid container item xs={12} spacing={1}>
+        <TrainingSchedule />
       </Grid>
     </Grid>
   )

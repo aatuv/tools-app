@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import * as workerTimers from 'worker-timers'
 import soundFile from '../../assets/mgs.m4a'
 import { Grid, Box, Paper, Button, TextField, Typography, Modal } from '@material-ui/core'
@@ -17,6 +17,14 @@ function Timer() {
     const [timerPause, setTimerPause] = useState(false);
     const [alert, setAlert] = useState(false);
 
+   
+   const returnTimerOn = useCallback(() => {
+       return timerOn;
+   }, [timerOn]);
+   const returnTimerPause = useCallback(() => {
+    return timerPause;
+}, [timerPause]);
+   
     // handle logic related to time left in timer
     useEffect(() => {
         if (initialMount.current) { // prevent on initial load
@@ -24,20 +32,18 @@ function Timer() {
         } else {
             let current = Date.now();
             const t = workerTimers.setInterval(() => {
-                if (timerOn === false) { // if timer is stopped
+                if (returnTimerOn() === false) { // if timer is stopped
                     workerTimers.clearInterval(t);
                 } else {
                     if (timer <= 0) { // if timer ran out
                         alertOn();
                         handleTimerOff();
-                        workerTimers.clearInterval(t);
                     } else {
-                        if (timerPause === true) { // if timer is paused, don't change timer amount
-                            setTimer(timer);
+                        if (returnTimerPause() === true) { // if timer is paused, don't change timer amount
+                            setTimer(timer => timer);
                         } else {
                             let elapsed = Date.now() - current;
-                            console.log(elapsed);
-                            setTimer(timer - elapsed);
+                            setTimer( timer => timer - elapsed);
                         }
                     }
                 }
@@ -46,7 +52,7 @@ function Timer() {
                 workerTimers.clearInterval(t);
             }
         }
-    }, [timer]);
+    }, [timer, returnTimerOn, returnTimerPause]);
 
     // dont allow empty input in input fields
     useEffect(() => {
@@ -67,17 +73,21 @@ function Timer() {
             initialMount.current = false;
         } else {
             if (!timerPause) {
-                setTimer(timer - 100);
+                setTimer(timer => timer - 100);
             }
         }
     }, [timerPause])
 
+
     // handle alert sound
     useEffect(() => {
+        const playAlertSound = () => {
+            alertSound.play();
+        }
         if (alert) {
             playAlertSound();
         }
-    }, [alert])
+    }, [alert, alertSound])
 
     // return time in milliseconds
     const calculateTime = () => {
@@ -95,10 +105,6 @@ function Timer() {
     const alertOff = () => {
         setAlert(false);
         stopAlertSound();
-    }
-
-    const playAlertSound = () => {
-        alertSound.play();
     }
 
     const stopAlertSound = () => {
