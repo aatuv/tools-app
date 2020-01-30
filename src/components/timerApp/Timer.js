@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import * as workerTimers from 'worker-timers'
 import soundFile from '../../assets/mgs.m4a'
 import { Grid, Box, Paper, Button, TextField, Typography, Modal } from '@material-ui/core'
-import { Pause, PlayArrow, Stop } from '@material-ui/icons'
+import { PlayArrow, Stop } from '@material-ui/icons'
 import blue from '@material-ui/core/colors/blue'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -13,38 +13,29 @@ function Timer() {
     const [minutes, setMinutes] = useState("0");
     const [seconds, setSeconds] = useState("0");
     const [timer, setTimer] = useState(0);
+    const [timerout, setTimerout] = useState(0);
     const [timerOn, setTimerOn] = useState(false);
-    const [timerPause, setTimerPause] = useState(false);
     const [alert, setAlert] = useState(false);
 
-   
-   const returnTimerOn = useCallback(() => {
-       return timerOn;
-   }, [timerOn]);
-   const returnTimerPause = useCallback(() => {
-    return timerPause;
-}, [timerPause]);
-   
+
+    const returnTimerOn = useCallback(() => {
+        return timerOn;
+    }, [timerOn]);
+
     // handle logic related to time left in timer
     useEffect(() => {
         if (initialMount.current) { // prevent on initial load
             initialMount.current = false;
         } else {
-            let current = Date.now();
             const t = workerTimers.setInterval(() => {
                 if (returnTimerOn() === false) { // if timer is stopped
                     workerTimers.clearInterval(t);
                 } else {
-                    if (timer <= 0) { // if timer ran out
+                    if (timer >= timerout) { // if timer ran out
                         alertOn();
                         handleTimerOff();
                     } else {
-                        if (returnTimerPause() === true) { // if timer is paused, don't change timer amount
-                            setTimer(timer => timer);
-                        } else {
-                            let elapsed = Date.now() - current;
-                            setTimer( timer => timer - elapsed);
-                        }
+                        setTimer(Date.now());
                     }
                 }
             }, 100);
@@ -52,7 +43,7 @@ function Timer() {
                 workerTimers.clearInterval(t);
             }
         }
-    }, [timer, returnTimerOn, returnTimerPause]);
+    }, [timer, timerout, returnTimerOn]);
 
     // dont allow empty input in input fields
     useEffect(() => {
@@ -66,18 +57,6 @@ function Timer() {
             setSeconds("0");
         }
     }, [hours, minutes, seconds]);
-
-    // put timer back on if pause is set back to false (doesnt proc on initial load)
-    useEffect(() => {
-        if (initialMount.current) {
-            initialMount.current = false;
-        } else {
-            if (!timerPause) {
-                setTimer(timer => timer - 100);
-            }
-        }
-    }, [timerPause])
-
 
     // handle alert sound
     useEffect(() => {
@@ -114,31 +93,18 @@ function Timer() {
     // * 
     //handle logic related to timer buttons
     const handleTimerOn = () => {
-        if (timerPause && timerOn) {
-            setTimer(timer);
-        }
-        if (!timerPause && timerOn) {
-            setTimer(timer);
-        } else {
-            setTimer(calculateTime());
-            setTimerOn(true);
-            handleTimerPauseOff();
-        }
+        setTimerout(Date.now() + calculateTime());
+        setTimer(Date.now());
+        setTimerOn(true);
     }
 
     const handleTimerOff = () => {
         setTimerOn(false);
         setTimer(0);
+        setTimerout(0);
         setHours("0");
         setMinutes("0");
         setSeconds("0");
-    }
-
-    const handleTimerPauseOn = () => {
-        setTimerPause(true);
-    }
-    const handleTimerPauseOff = () => {
-        setTimerPause(false);
     }
     // *
 
@@ -203,20 +169,20 @@ function Timer() {
     // *
     // return time left in timer in readable form
     const qsecs = () => {
-        let qsecs = Math.floor(timer / (100) % 10);
+        let qsecs = Math.floor((timerout - timer) / (100) % 10);
         return qsecs;
     }
 
     const secs = () => {
-        let secs = ('0' + Math.floor((timer / (1000))) % 60).slice(-2);
+        let secs = ('0' + Math.floor(((timerout - timer) / (1000))) % 60).slice(-2);
         return secs;
     }
     const mins = () => {
-        let mins = ('0' + Math.floor((timer / (1000 * 60)) % 60)).slice(-2);
+        let mins = ('0' + Math.floor(((timerout - timer) / (1000 * 60)) % 60)).slice(-2);
         return mins;
     }
     const hrs = () => {
-        let hrs = ('0' + Math.floor((timer / (1000 * 60 * 60)))).slice(-2);
+        let hrs = ('0' + Math.floor(((timerout - timer) / (1000 * 60 * 60)))).slice(-2);
         return hrs;
     }
     //*
@@ -288,8 +254,6 @@ function Timer() {
                     <Paper className={classes.paper}>
                         <Box className={classes.buttons}>
                             <Button className={classes.button} variant="outlined" onClick={handleTimerOff}><Stop /></Button>
-                            <Button className={classes.button} variant="outlined" onClick={handleTimerPauseOn}><Pause /></Button>
-                            <Button className={classes.button} variant="outlined" onClick={handleTimerPauseOff}><PlayArrow /></Button>
                         </Box>
                     </Paper>
                 </Grid>

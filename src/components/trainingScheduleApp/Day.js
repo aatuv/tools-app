@@ -1,10 +1,11 @@
 import React from 'react'
+import { Typography, Paper } from '@material-ui/core'
 
-function Day() {
+function Day(props) {
     return (
-        <div>
-            
-        </div>
+        <Paper className={props.classes.paper}>
+        <Typography>{props.data.day}</Typography>
+        </Paper>
     )
 }
 

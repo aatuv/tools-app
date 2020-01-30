@@ -101,10 +101,10 @@ export default function ForecastDay({ weather, options, weekdays, handlePopoverC
                                     {weather.weather[0].description}
                                 </Typography>
                                 <Typography variant="h6" align="center">
-                                    {`${weather.main.temp}°C`}
+                                    {`${Math.round(weather.main.temp)}°C`}
                                 </Typography>
                                 <Typography gutterBottom variant="body1" align="center" >
-                                    {`Feels like ${weather.main.feels_like}°C`}
+                                    {`Feels like ${Math.round(weather.main.feels_like)}°C`}
                                 </Typography>
                             </Grid>
                         </Grid>

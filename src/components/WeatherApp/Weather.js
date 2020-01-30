@@ -10,6 +10,7 @@ import Forecast from './Forecast.js'
 function Weather() {
   const [forecastData, setForecast] = useState({ city: { coord: {} }, list: [{ main: {}, weather: [{}], clouds: {}, wind: {}, sys: {} }] });
   const [weatherData, setWeather] = useState({ coord: {}, main: {}, weather: [{}], visibility: 0, clouds: {}, wind: {}, dt: 0, sys: {} });
+  const [daily, setDaily] = useState([{ main: {}, weather: [{}], clouds: {}, wind: {}, sys: {} }]);
   const [isLoading, setIsLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentId, setCurrentId] = useState(0);
@@ -40,6 +41,7 @@ function Weather() {
         location = { lat: data.latitude, lon: data.longitude };
         const res3 = await Axios.get(`http://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=metric&APPID=e6d8000c0a41bdd5ab549dc1137edec6`);
         !cancelled && setForecast(await res3.data)
+        !cancelled && setDaily(dailyForecast(await res3.data.list, await weatherData.dt))
       } catch (err) {
         console.log(err);
       } finally {
@@ -96,7 +98,6 @@ function Weather() {
   }));
 
   const classes = useStyles();
-  const daily = dailyForecast(forecastData.list, weatherData.dt);
   const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' };
   const weekdays = ['Sunday', 'Monday', 'Tuesday',
     'Wednesday', 'Thursday', 'Friday', 'Saturday'];

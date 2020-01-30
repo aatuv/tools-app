@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
 function TrainingSchedule() {
-    const [days, setDays] = useState([{}]);
+    const [days, setDays] = useState([{day: 'monday', data:{}, id: 1}, {day: 'tuesday', data:{}, id: 2}]);
 
     const useStyles = makeStyles(theme => ({
         main: {
@@ -41,7 +41,7 @@ function TrainingSchedule() {
     return (
         <Paper className={classes.main}>
         <Grid className={classes.container} container spacing={1}>
-            <Weekdays days={days} />
+            <Weekdays days={days} classes={classes} />
         </Grid>
         </Paper>
     )
