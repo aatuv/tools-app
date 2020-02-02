@@ -1,6 +1,6 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
-import Day from './Day.js'
+import Day from './TrainingDay.js'
 
 function Weekdays(props) {
     const week = () => {
@@ -11,7 +11,7 @@ function Weekdays(props) {
         ));
     }
     return (
-        <Grid className={props.classes.container} container spacing={1}>
+        <Grid className={props.classes.container} container spacing={2}>
             {week()}
         </Grid>
     )

@@ -76,8 +76,7 @@ function Clock() {
         paper: {
             minWidth: '100%',
             backgroundColor: blue[300],
-            color: '#ffffff',
-            padding: theme.spacing(2)
+            color: '#ffffff'
         },
         item: {
             display: 'flex',

@@ -10,25 +10,27 @@ function App() {
   function gridRow() {
     return (
       <Fragment>
-        <Grid item xs={4}>
-          <Weather />
-        </Grid>
-        <Grid item xs={4}>
-          <Timer />
-        </Grid>
-        <Grid item xs={4}>
-          <Clock />
+        <Grid container flexDirection='row' spacing={3}>
+          <Grid item xs={4}>
+            <Weather />
+          </Grid>
+          <Grid item xs={4}>
+            <Timer />
+          </Grid>
+          <Grid item xs={4}>
+            <Clock />
+          </Grid>
         </Grid>
       </Fragment>
     )
   }
 
   return (
-    <Grid style={{backgroundColor: blue[800]}} container spacing={2}>
-      <Grid container item xs={12} spacing={1}>
+    <Grid container style={{ backgroundColor: blue[800], minHeight: '100vh' }} flexDirection='column' spacing={2}>
+      <Grid item xs={12}>
         {gridRow()}
       </Grid>
-      <Grid container item xs={12} spacing={1}>
+      <Grid item xs={12}>
         <TrainingSchedule />
       </Grid>
     </Grid>
