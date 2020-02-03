@@ -17,26 +17,24 @@ const useStyles = makeStyles(theme => ({
         pointerEvents: 'none'
     },
     card: {
-        minWidth: 300,
-        minHeight: 300,
         backgroundColor: blue[500],
         color: '#ffffff',
-      }
+    }
 }));
 export default function ForecastDay({ weather, options, weekdays, handlePopoverClose, handlePopoverOpen, anchorEl, currentId }) {
 
     const classes = useStyles();
 
-    function handlePopOpen(event) {
+    const handlePopOpen = (event) => {
         handlePopoverOpen(event.target, weather.dt);
     }
-    function handleOpen() {
+    const handleOpen = () => {
         if (currentId === weather.dt) {
             return true;
         } else return false;
     }
     const open = handleOpen();
-    
+
     return (
         <div>
             <Paper
@@ -82,27 +80,37 @@ export default function ForecastDay({ weather, options, weekdays, handlePopoverC
                     <CardContent>
                         <Grid
                             container
-                            direction="row"
+                            direction="column"
                             justify="center"
                             alignItems="center"
-                            spacing={3}
+                            spacing={1}
                         >
-                            <Grid item xs={6}>
+                            <Grid item xs>
                                 <Typography variant="h6" align="center">
                                     {`${weekdays[new Date(weather.dt * 1000).getDay()]}`}
                                 </Typography>
+                            </Grid>
+                            <Grid item xs>
                                 <Typography variant="subtitle1" align="center">
                                     {new Date(weather.dt * 1000).toLocaleDateString('de', options)}
                                 </Typography>
+                            </Grid>
+                            <Grid item xs>
                                 <Typography variant="subtitle1" align="center">
                                     <i className={`owf owf-${weather.weather[0].id}-${weather.sys.pod} owf-5x`}></i>
                                 </Typography>
+                            </Grid>
+                            <Grid item xs>
                                 <Typography variant="subtitle1" align="center">
                                     {weather.weather[0].description}
                                 </Typography>
+                            </Grid>
+                            <Grid item xs>
                                 <Typography variant="h6" align="center">
                                     {`${Math.round(weather.main.temp)}°C`}
                                 </Typography>
+                            </Grid>
+                            <Grid item xs>
                                 <Typography gutterBottom variant="body1" align="center" >
                                     {`Feels like ${Math.round(weather.main.feels_like)}°C`}
                                 </Typography>

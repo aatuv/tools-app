@@ -5,15 +5,29 @@ import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
 function TrainingSchedule() {
-    const [days, setDays] = useState([
-        {day: 'monday', data:{}, id: 1}, 
-        {day: 'tuesday', data:{}, id: 2}, 
-        {day: 'wednesday', data:{}, id: 3}, 
-        {day: 'thursday', data:{}, id: 4},
-        {day: 'friday', data:{}, id: 5},
-        {day: 'saturday', data:{}, id: 6},
-        {day: 'sunday', data:{}, id: 7}
+    const [trainingDays, setTrainingDays] = useState([
+        { day: 'monday', data: {}, id: 1 },
+        { day: 'tuesday', data: {}, id: 2 },
+        { day: 'wednesday', data: {}, id: 3 },
+        { day: 'thursday', data: {}, id: 4 },
+        { day: 'friday', data: {}, id: 5 },
+        { day: 'saturday', data: {}, id: 6 },
+        { day: 'sunday', data: {}, id: 7 }
     ]);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [currentId, setCurrentId] = useState(0);
+    const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    // handle the showing of daily forecasts as a popover
+    const handlePopoverOpen = (target, targetId) => {
+        setAnchorEl(target);
+        setCurrentId(targetId);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+        setCurrentId(0);
+    };
 
     const useStyles = makeStyles(theme => ({
         main: {
@@ -47,13 +61,30 @@ function TrainingSchedule() {
             backgroundColor: theme.palette.background.paper,
             boxShadow: theme.shadows[5],
             padding: theme.spacing(2, 4, 3)
+        },
+        popover: {
+            pointerEvents: 'none'
+        },
+        card: {
+            minWidth: 300,
+            minHeight: 300,
+            backgroundColor: blue[500],
+            color: '#ffffff',
         }
     }));
 
     const classes = useStyles();
     return (
         <Paper className={classes.main}>
-            <Weekdays days={days} classes={classes} />
+            <Weekdays
+                weekdays={weekdays}
+                trainingDays={trainingDays}
+                anchorEl={anchorEl}
+                classes={classes}
+                handlePopoverOpen={handlePopoverOpen}
+                handlePopoverClose={handlePopoverClose}
+                currentId={currentId}
+            />
         </Paper>
     )
 }
