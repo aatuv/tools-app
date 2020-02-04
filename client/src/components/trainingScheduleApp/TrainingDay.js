@@ -6,19 +6,24 @@ function Day(props) {
     const handlePopOpen = (event) => {
         props.handlePopoverOpen(event.target, props.data.id);
     }
-    const handleOpen = () => {
+    const handleModOpen = (event) => {
+        props.handleModalOpen(event.target, props.data.id);
+    }
+    const isPopoverOpen = () => {
         if (props.currentId === props.data.id) {
             return true;
         } else return false;
     }
-    const open = handleOpen();
+
+    const openPopover = isPopoverOpen();
     return (
         <Paper
             className={props.classes.paper}
-            aria-owns={open ? 'mouse-over-popover' : undefined}
+            aria-owns={openPopover ? 'mouse-over-popover' : undefined}
             aria-haspopup="true"
             onMouseEnter={handlePopOpen}
             onMouseLeave={props.handlePopoverClose}
+            onClick={handleModOpen}
         >
             <Typography variant="body2" align="center">{props.data.day}</Typography>
             <Typography variant="body2" align="center">{props.data.day}</Typography>
@@ -33,7 +38,7 @@ function Day(props) {
             <Popover
                 id="mouse-over-popover"
                 className={props.classes.popover}
-                open={open}
+                open={openPopover}
                 anchorEl={props.anchorEl}
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -50,11 +55,14 @@ function Day(props) {
                     <CardContent>
                         <Grid
                             container
-                            direction="row"
+                            direction="column"
                             justify="center"
                             alignItems="center"
                             spacing={3}
                         >
+                            <Grid item xs>
+                                <Typography variant="h6">{props.data.day}</Typography>
+                            </Grid>
                         </Grid>
                     </CardContent>
                 </Card>
