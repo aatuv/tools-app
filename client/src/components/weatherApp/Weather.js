@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Axios from 'axios'
 import City from './City.js'
 import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 import CurrentWeather from './CurrentWeather.js'
-import { Grid, Paper, CircularProgress } from '@material-ui/core'
+import { Grid, Paper, CircularProgress, TextField, Typography } from '@material-ui/core'
 import Forecast from './Forecast.js'
 
 function Weather() {
@@ -14,44 +14,50 @@ function Weather() {
   const [isLoading, setIsLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentId, setCurrentId] = useState(0);
+  const [apiKey, setApiKey] = useState("");
+  const initialMount = useRef(true);
 
   // fetch weather data on initial load
   useEffect(() => {
-    let cancelled = false;
-    var location = {};
-    async function fetchWData() { // fetch data for current weather
-      !cancelled && setIsLoading(true)
-      try {
-        const res1 = await Axios.get('https://ipapi.co/json/');
-        const data = await res1.data;
-        location = { lat: data.latitude, lon: data.longitude };
-        const res2 = await Axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=metric&APPID=e6d8000c0a41bdd5ab549dc1137edec6`);
-        !cancelled && setWeather(await res2.data)
-      } catch (err) {
-        console.log(err);
-      } finally {
-        !cancelled && setIsLoading(false)
+    if (initialMount.current) { // prevent on initial load
+      initialMount.current = false;
+    } else {
+      let cancelled = false;
+      var location = {};
+      async function fetchWData() { // fetch data for current weather
+        !cancelled && setIsLoading(true)
+        try {
+          const res1 = await Axios.get('https://ipapi.co/json/');
+          const data = await res1.data;
+          location = { lat: data.latitude, lon: data.longitude };
+          const res2 = await Axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=metric&APPID=${apiKey}`);
+          !cancelled && setWeather(await res2.data)
+        } catch (err) {
+          console.log(err);
+        } finally {
+          !cancelled && setIsLoading(false)
+        }
       }
-    }
-    async function fetchFData() { // fetch forecast data
-      !cancelled && setIsLoading(true)
-      try {
-        const res1 = await Axios.get('https://ipapi.co/json/');
-        const data = await res1.data;
-        location = { lat: data.latitude, lon: data.longitude };
-        const res3 = await Axios.get(`http://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=metric&APPID=e6d8000c0a41bdd5ab549dc1137edec6`);
-        !cancelled && setForecast(await res3.data)
-        !cancelled && setDaily(dailyForecast(await res3.data.list, await weatherData.dt))
-      } catch (err) {
-        console.log(err);
-      } finally {
-        !cancelled && setIsLoading(false)
+      async function fetchFData() { // fetch forecast data
+        !cancelled && setIsLoading(true)
+        try {
+          const res1 = await Axios.get('https://ipapi.co/json/');
+          const data = await res1.data;
+          location = { lat: data.latitude, lon: data.longitude };
+          const res3 = await Axios.get(`http://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=metric&APPID=${apiKey}`);
+          !cancelled && setForecast(await res3.data)
+          !cancelled && setDaily(dailyForecast(await res3.data.list, await weatherData.dt))
+        } catch (err) {
+          console.log(err);
+        } finally {
+          !cancelled && setIsLoading(false)
+        }
       }
+      fetchWData()
+      fetchFData()
+      return () => { cancelled = true }
     }
-    fetchWData()
-    fetchFData()
-    return () => { cancelled = true }
-  }, []);
+  }, [apiKey]);
 
 
   // handle the showing of daily forecasts as a popover
@@ -94,7 +100,9 @@ function Weather() {
       display: 'inline-block',
       width: '100%'
     },
-
+    input: {
+      backgroundColor: blue[50]
+  }
   }));
 
   const classes = useStyles();
@@ -102,9 +110,15 @@ function Weather() {
   const weekdays = ['Sunday', 'Monday', 'Tuesday',
     'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-  return isLoading ? <CircularProgress /> :
+  return isLoading ? 
+  <CircularProgress />
+  :
     <Paper className={classes.main} elevation={3}>
       <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Typography variant="h6">Enter a valid free openweathermap.com API key</Typography>
+      <TextField className={classes.input} onInput={e => setApiKey(e.target.value)} label="API key" variant="filled"/>
+        </Grid>
         <Grid item xs={12}>
           <City city={forecastData.city} />
         </Grid>

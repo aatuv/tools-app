@@ -62,7 +62,7 @@ function Clock() {
         main: {
             display: 'flex',
             justifyContent: 'center',
-            minHeight: '100%',
+            minHeight: '60vh',
             padding: theme.spacing(2),
             backgroundColor: blue[700],
             color: blue[50]
