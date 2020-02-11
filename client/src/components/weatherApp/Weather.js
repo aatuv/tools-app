@@ -116,7 +116,7 @@ function Weather() {
     <Paper className={classes.main} elevation={3}>
       <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Typography variant="h6">Enter a valid free openweathermap.com API key</Typography>
+        <Typography variant="h6">Enter a valid free openweathermap.org API key</Typography>
       <TextField className={classes.input} onInput={e => setApiKey(e.target.value)} label="API key" variant="filled"/>
         </Grid>
         <Grid item xs={12}>
