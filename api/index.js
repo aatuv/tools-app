@@ -10,6 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// route to /routes/trainingSchedule.js
 app.use('/', trainingSchedule);
 
 // catch 404

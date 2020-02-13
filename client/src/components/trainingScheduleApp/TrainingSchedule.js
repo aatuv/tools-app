@@ -1,23 +1,47 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import Axios from 'axios'
 import { Grid, Paper } from '@material-ui/core'
 import Weekdays from './Weekdays.js'
 import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
 function TrainingSchedule() {
-    const [trainingDays, setTrainingDays] = useState([
-        { day: 'monday', data: {}, id: 1 },
-        { day: 'tuesday', data: {}, id: 2 },
-        { day: 'wednesday', data: {}, id: 3 },
-        { day: 'thursday', data: {}, id: 4 },
-        { day: 'friday', data: {}, id: 5 },
-        { day: 'saturday', data: {}, id: 6 },
-        { day: 'sunday', data: {}, id: 7 }
-    ]);
+    const [excercises, setExcercises] = useState([{id:"", weekday:"", name: "", length: "", content: ""}]);
+    const [excerciseNames, setExcerciseNames] = useState([{name: "", type_id: ""}]);
+    const [isLoading, setIsLoading] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [currentId, setCurrentId] = useState(0);
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+
+    useEffect(() => {
+        let cancelled = false;
+        const fetchExcercises = async () => {
+            !cancelled && setIsLoading(true)
+            try {
+                const response = await Axios.get('http://localhost:5000/schedule');
+                !cancelled && setExcercises(await response.data)
+            } catch (err) {
+                console.log(err);
+            } finally {
+                !cancelled && setIsLoading(false)
+            }
+        }
+        const fetchExcerciseNames = async () => {
+            !cancelled && setIsLoading(true)
+            try {
+                const response = await Axios.get('http://localhost:5000/fetchNames');
+                !cancelled && setExcerciseNames(await response.data)
+            } catch (err) {
+                console.log(err);
+            } finally {
+                !cancelled && setIsLoading(false)
+            }
+        }
+        fetchExcercises()
+        fetchExcerciseNames()
+        return () => { cancelled = true }
+    }, []);
     // handle the showing of daily forecasts as a popover
     const handlePopoverOpen = (target, targetId) => {
         setAnchorEl(target);
@@ -78,7 +102,8 @@ function TrainingSchedule() {
         <Paper className={classes.main}>
             <Weekdays
                 weekdays={weekdays}
-                trainingDays={trainingDays}
+                excercises={excercises}
+                excerciseNames={excerciseNames}
                 anchorEl={anchorEl}
                 classes={classes}
                 handlePopoverOpen={handlePopoverOpen}
