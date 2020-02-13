@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
 function TrainingSchedule() {
-    const [excercises, setExcercises] = useState([{id:"", weekday:"", name: "", length: "", content: ""}]);
+    const [excercises, setExcercises] = useState([[{id:"", weekday:"", name: "", length: "", content: ""}]]);
     const [excerciseNames, setExcerciseNames] = useState([{name: "", type_id: ""}]);
     const [isLoading, setIsLoading] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -60,13 +60,22 @@ function TrainingSchedule() {
             color: blue[50]
         },
         container: {
-            flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
             minHeight: '100%'
         },
+        dayContainer: {
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
         paper: {
             backgroundColor: blue[300],
+            color: '#ffffff',
+            padding: theme.spacing(2)
+        },
+        dayPaper: {
+            backgroundColor: blue[400],
             color: '#ffffff',
             padding: theme.spacing(2)
         },

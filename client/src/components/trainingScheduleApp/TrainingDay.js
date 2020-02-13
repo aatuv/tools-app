@@ -15,6 +15,15 @@ function Day(props) {
         } else return false;
     }
 
+    const scheduleOfTheDay = () => {
+        return props.data.list.map((row) => (
+            <Grid item xs key={row.id}>
+                <Paper className={props.classes.dayPaper}>
+                    <Typography variant="h6">{row.name}</Typography>
+                </Paper>
+            </Grid>
+        ))
+    }
     const openPopover = isPopoverOpen();
     return (
         <Paper
@@ -25,11 +34,12 @@ function Day(props) {
             onMouseLeave={props.handlePopoverClose}
             onClick={handleModOpen}
         >
-            <Typography variant="body2" align="center">{props.data.day}</Typography>
-            <Typography variant="body2" align="center">{props.data.day}</Typography>
-            <Typography variant="body2" align="center">{props.data.day}</Typography>
-            <Typography variant="body2" align="center">{props.data.day}</Typography>
-            <Typography variant="body2" align="center">{props.data.day}</Typography>
+            <Grid className={props.classes.dayContainer} container spacing={1} >
+                <Paper className={props.classes.paper}>
+                    <Typography variant="h5">{props.data.weekday}</Typography>
+                </Paper>
+                {scheduleOfTheDay()}
+            </Grid>
             {/*             <Modal aria-labelledby="simple-modal-title" open={alert}>
                 <div className={props.classes.modal}>
                     <Typography variant="h4">Content</Typography>
@@ -58,7 +68,7 @@ function Day(props) {
                             direction="column"
                             justify="center"
                             alignItems="center"
-                            spacing={3}
+                            spacing={2}
                         >
                             <Grid item xs>
                                 <Typography variant="h6">{props.data.weekday}</Typography>

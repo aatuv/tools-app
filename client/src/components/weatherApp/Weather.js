@@ -14,51 +14,47 @@ function Weather() {
   const [isLoading, setIsLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentId, setCurrentId] = useState(0);
-  const [apiKey, setApiKey] = useState("");
+  const [apiKey, setApiKey] = useState(localStorage.getItem('localApiKey') || '');
   const initialMount = useRef(true);
 
   // fetch weather data on initial load
   useEffect(() => {
-    if (initialMount.current) { // prevent on initial load
-      initialMount.current = false;
-    } else {
-      let cancelled = false;
-      var location = {};
-      async function fetchWData() { // fetch data for current weather
-        !cancelled && setIsLoading(true)
-        try {
-          const res1 = await Axios.get('https://ipapi.co/json/');
-          const data = await res1.data;
-          location = { lat: data.latitude, lon: data.longitude };
-          const res2 = await Axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=metric&APPID=${apiKey}`);
-          !cancelled && setWeather(await res2.data)
-        } catch (err) {
-          console.log(err);
-        } finally {
-          !cancelled && setIsLoading(false)
-        }
+    localStorage.setItem('localApiKey', apiKey);
+    let cancelled = false;
+    var location = {};
+    async function fetchWData() { // fetch data for current weather
+      !cancelled && setIsLoading(true)
+      try {
+        const res1 = await Axios.get('https://ipapi.co/json/');
+        const data = await res1.data;
+        location = { lat: data.latitude, lon: data.longitude };
+        const res2 = await Axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=metric&APPID=${apiKey}`);
+        !cancelled && setWeather(await res2.data)
+      } catch (err) {
+        console.log(err);
+      } finally {
+        !cancelled && setIsLoading(false)
       }
-      async function fetchFData() { // fetch forecast data
-        !cancelled && setIsLoading(true)
-        try {
-          const res1 = await Axios.get('https://ipapi.co/json/');
-          const data = await res1.data;
-          location = { lat: data.latitude, lon: data.longitude };
-          const res3 = await Axios.get(`http://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=metric&APPID=${apiKey}`);
-          !cancelled && setForecast(await res3.data)
-          !cancelled && setDaily(dailyForecast(await res3.data.list, await weatherData.dt))
-        } catch (err) {
-          console.log(err);
-        } finally {
-          !cancelled && setIsLoading(false)
-        }
-      }
-      fetchWData()
-      fetchFData()
-      return () => { cancelled = true }
     }
+    async function fetchFData() { // fetch forecast data
+      !cancelled && setIsLoading(true)
+      try {
+        const res1 = await Axios.get('https://ipapi.co/json/');
+        const data = await res1.data;
+        location = { lat: data.latitude, lon: data.longitude };
+        const res3 = await Axios.get(`http://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&units=metric&APPID=${apiKey}`);
+        !cancelled && setForecast(await res3.data)
+        !cancelled && setDaily(dailyForecast(await res3.data.list, await weatherData.dt))
+      } catch (err) {
+        console.log(err);
+      } finally {
+        !cancelled && setIsLoading(false)
+      }
+    }
+    fetchWData()
+    fetchFData()
+    return () => { cancelled = true }
   }, [apiKey]);
-
 
   // handle the showing of daily forecasts as a popover
   const handlePopoverOpen = (target, targetId) => {
@@ -102,7 +98,7 @@ function Weather() {
     },
     input: {
       backgroundColor: blue[50]
-  }
+    }
   }));
 
   const classes = useStyles();
@@ -110,40 +106,60 @@ function Weather() {
   const weekdays = ['Sunday', 'Monday', 'Tuesday',
     'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-  return isLoading ? 
-  <CircularProgress />
-  :
-    <Paper className={classes.main} elevation={3}>
-      <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <Typography variant="h6">Enter a valid free openweathermap.org API key</Typography>
-      <TextField className={classes.input} onInput={e => setApiKey(e.target.value)} label="API key" variant="filled"/>
-        </Grid>
-        <Grid item xs={12}>
-          <City city={forecastData.city} />
-        </Grid>
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>
-            <CurrentWeather
-              weather={weatherData}
-              options={options}
-              weekdays={weekdays}
-            />
+  const isApiKeyEntered = () => {
+    if (localStorage.getItem('localApiKey') === '')
+      return false;
+    else return true;
+  }
+
+  const returnContent = () => {
+    if (isApiKeyEntered() === true) {
+      return isLoading
+        ? <CircularProgress />
+        :
+        <Paper className={classes.main} elevation={3}>
+          <Grid container spacing={3}>
+            {isApiKeyEntered()}
+            <Grid item xs={12}>
+              <City city={forecastData.city} />
+            </Grid>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <CurrentWeather
+                  weather={weatherData}
+                  options={options}
+                  weekdays={weekdays}
+                />
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Forecast
+                forecast={daily}
+                options={options}
+                weekdays={weekdays}
+                handlePopoverClose={handlePopoverClose}
+                handlePopoverOpen={handlePopoverOpen}
+                anchorEl={anchorEl}
+                currentId={currentId}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+    }
+    else {
+      return (
+        <Paper className={classes.main}>
+          <Paper className={classes.paper} style={{padding: '1.5em'}}>
+            <Typography variant="h4">Weather</Typography>
+            <Typography variant="h6">Enter a valid free openweathermap.org API key</Typography>
+            <TextField className={classes.input} onInput={e => setApiKey(e.target.value)} label="API key" variant="filled" />
           </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Forecast
-            forecast={daily}
-            options={options}
-            weekdays={weekdays}
-            handlePopoverClose={handlePopoverClose}
-            handlePopoverOpen={handlePopoverOpen}
-            anchorEl={anchorEl}
-            currentId={currentId}
-          />
-        </Grid>
-      </Grid>
-    </Paper>
+        </Paper>
+      )
+    }
+  }
+
+  return returnContent();
 }
 
 export default Weather;
