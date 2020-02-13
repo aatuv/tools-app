@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
-import { Grid, Paper } from '@material-ui/core'
+import { Grid, Paper, CircularProgress } from '@material-ui/core'
 import Weekdays from './Weekdays.js'
 import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
@@ -30,7 +30,7 @@ function TrainingSchedule() {
         const fetchExcerciseNames = async () => {
             !cancelled && setIsLoading(true)
             try {
-                const response = await Axios.get('http://localhost:5000/fetchNames');
+                const response = await Axios.get('http://localhost:5000/excerciseNames');
                 !cancelled && setExcerciseNames(await response.data)
             } catch (err) {
                 console.log(err);
@@ -98,8 +98,8 @@ function TrainingSchedule() {
     }));
 
     const classes = useStyles();
-    return (
-        <Paper className={classes.main}>
+    return isLoading ? <CircularProgress />
+        : <Paper className={classes.main}>
             <Weekdays
                 weekdays={weekdays}
                 excercises={excercises}
@@ -111,7 +111,6 @@ function TrainingSchedule() {
                 currentId={currentId}
             />
         </Paper>
-    )
 }
 
 export default TrainingSchedule;

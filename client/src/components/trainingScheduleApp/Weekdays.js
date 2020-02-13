@@ -4,21 +4,23 @@ import Day from './TrainingDay.js'
 
 function Weekdays(props) {
 
-    const weekdays = () => {
-        return props.weekdays.map(weekday => (
-            <Grid item xs>
-                <Paper className={props.classes.paper}>
-                    <Typography key={weekday} variant="h5">{weekday}</Typography>
-                </Paper>
-            </Grid>
-        ))
+    const returnSchedule = (excercises) => {
+        let dailySchedule = [];
+        for (let i = 0; i < props.weekdays.length; i++) {
+            for (let j = 0; j < excercises.length; j++) {
+                if (excercises[j].weekday === props.weekdays[i]) {
+                    dailySchedule.push(excercises[j]);
+                }
+            }
+        }
+        return dailySchedule;
     }
+    const schedule = returnSchedule(props.excercises);
     const trainingWeek = () => {
-        return props.trainingDays.map(trainingDay => (
-            <Grid item xs>
+        return schedule.map(trainingDay => (
+            <Grid item xs key={trainingDay.id}>
                 <Day
                     data={trainingDay}
-                    key={trainingDay.id}
                     classes={props.classes}
                     anchorEl={props.anchorEl}
                     handlePopoverOpen={props.handlePopoverOpen}
@@ -30,9 +32,6 @@ function Weekdays(props) {
     }
     return (
         <>
-            <Grid className={props.classes.container} container spacing={2}>
-                {weekdays()}
-            </Grid>
             <Grid className={props.classes.container} container spacing={2}>
                 {trainingWeek()}
             </Grid>

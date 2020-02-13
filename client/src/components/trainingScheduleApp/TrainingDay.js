@@ -61,7 +61,10 @@ function Day(props) {
                             spacing={3}
                         >
                             <Grid item xs>
-                                <Typography variant="h6">{props.data.day}</Typography>
+                                <Typography variant="h6">{props.data.weekday}</Typography>
+                                <Typography variant="h6">{props.data.name}</Typography>
+                                <Typography variant="h6">{props.data.length}</Typography>
+                                <Typography variant="h6">{props.data.content}</Typography>
                             </Grid>
                         </Grid>
                     </CardContent>
