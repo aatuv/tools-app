@@ -198,6 +198,7 @@ function Timer() {
             color: blue[50]
         },
         paper: {
+            minHeight: '100%',
             backgroundColor: blue[300],
             color: '#ffffff',
             padding: theme.spacing(2)

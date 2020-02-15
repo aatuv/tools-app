@@ -60,21 +60,20 @@ function Clock() {
 
     const useStyles = makeStyles(theme => ({
         main: {
-            display: 'flex',
-            justifyContent: 'center',
-            minHeight: '60vh',
+            minHeight: '100%',
             padding: theme.spacing(2),
             backgroundColor: blue[700],
             color: blue[50]
         },
         container: {
-            padding: theme.spacing(2),
             justifyContent: 'center',
+            alignItems: 'center',
             minHeight: '100%',
             minWidth: '100%'
         },
         paper: {
-            minWidth: '100%',
+            minHeight: '100%',
+            padding: theme.spacing(2),
             backgroundColor: blue[300],
             color: '#ffffff'
         },
@@ -92,17 +91,17 @@ function Clock() {
     return (
         <Paper className={classes.main}>
             <Paper className={classes.paper}>
-                <Grid className={classes.container} container direction="column" alignItems="stretch" spacing={1}>
-                    <Grid className={classes.item} item xs={12}>
+                <Grid className={classes.container} container direction="column" alignItems="stretch" spacing={5}>
+                    <Grid item xs={12}>
                         <Typography className={classes.typography} variant="h4">{weekdays[new Date(Date.now()).getDay()]}</Typography>
                     </Grid>
-                    <Grid className={classes.item} item xs={12}>
+                    <Grid item xs={12}>
                         <Typography className={classes.typography} variant="h4">{new Date(Date.now()).toLocaleDateString('de', options)}</Typography>
                     </Grid>
-                    <Grid className={classes.item} item xs={12}>
+                    <Grid item xs={12}>
                         <Typography className={classes.typography} variant="h3">{`${('0' + hours).slice(-2)}:${('0' + minutes).slice(-2)}:${('0' + seconds).slice(-2)}`}</Typography>
                     </Grid>
-                    <Grid className={classes.item} item xs>
+                    <Grid item xs style={{paddingBottom: '4em'}}>
                         <animated.div className="clock">
                             <animated.div className="seconds" style={secHand}></animated.div>
                             <animated.div className="minutes" style={minHand}></animated.div>

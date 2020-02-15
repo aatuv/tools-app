@@ -1,5 +1,5 @@
 .clock {
-    position: absolute;
+    position: relative;
     border: .5em solid #ffffff;
     border-radius: 50%;
     height: 18em;

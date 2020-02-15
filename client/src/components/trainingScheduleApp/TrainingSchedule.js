@@ -6,9 +6,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
 function TrainingSchedule() {
-    const [excercises, setExcercises] = useState([[{id:"", weekday:"", name: "", length: "", content: ""}]]);
-    const [excerciseNames, setExcerciseNames] = useState([{name: "", type_id: ""}]);
+    const [excercises, setExcercises] = useState([[{ id: "", weekday: "", name: "", length: "", content: "" }]]);
+    const [excerciseNames, setExcerciseNames] = useState([{ name: "", type_id: "" }]);
     const [isLoading, setIsLoading] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [currentId, setCurrentId] = useState(0);
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -42,19 +43,21 @@ function TrainingSchedule() {
         fetchExcerciseNames()
         return () => { cancelled = true }
     }, []);
-    // handle the showing of daily forecasts as a popover
-    const handlePopoverOpen = (target, targetId) => {
+
+    const handleModalOpen = (target, targetId) => {
         setAnchorEl(target);
         setCurrentId(targetId);
-    };
-
-    const handlePopoverClose = () => {
+        setModalOpen(true);
+    }
+    const handleModalClose = () => {
         setAnchorEl(null);
         setCurrentId(0);
-    };
+        setModalOpen(false);
+    }
 
     const useStyles = makeStyles(theme => ({
         main: {
+            minHeight: '100%',
             padding: theme.spacing(2),
             backgroundColor: blue[700],
             color: blue[50]
@@ -67,7 +70,7 @@ function TrainingSchedule() {
         dayContainer: {
             flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'stretch'
         },
         paper: {
             backgroundColor: blue[300],
@@ -91,9 +94,15 @@ function TrainingSchedule() {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-evenly',
-            backgroundColor: theme.palette.background.paper,
+            position: 'absolute',
+            top: '30%',
+            left: '30%',
+            width: '20%',
+            height: '20%',
+            border: '2px solid #000',
             boxShadow: theme.shadows[5],
-            padding: theme.spacing(2, 4, 3)
+            backgroundColor: theme.palette.background.paper,
+            padding: theme.spacing(2, 4, 3),
         },
         popover: {
             pointerEvents: 'none'
@@ -113,11 +122,12 @@ function TrainingSchedule() {
                 weekdays={weekdays}
                 excercises={excercises}
                 excerciseNames={excerciseNames}
-                anchorEl={anchorEl}
                 classes={classes}
-                handlePopoverOpen={handlePopoverOpen}
-                handlePopoverClose={handlePopoverClose}
+                anchorEl={anchorEl}
                 currentId={currentId}
+                modalOpen={modalOpen}
+                handleModalOpen={handleModalOpen}
+                handleModalClose={handleModalClose}
             />
         </Paper>
 }

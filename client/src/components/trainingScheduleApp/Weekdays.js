@@ -26,9 +26,10 @@ function Weekdays(props) {
                     data={trainingDay}
                     classes={props.classes}
                     anchorEl={props.anchorEl}
-                    handlePopoverOpen={props.handlePopoverOpen}
-                    handlePopoverClose={props.handlePopoverClose}
                     currentId={props.currentId}
+                    modalOpen={props.modalOpen}
+                    handleModalOpen={props.handleModalOpen}
+                    handleModalClose={props.handleModalClose}
                 />
             </Grid>
         ));
