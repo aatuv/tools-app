@@ -1,68 +1,58 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
+DROP TABLE IF EXISTS excercise_day;
+CREATE TABLE IF NOT EXISTS excercise_day (
+id varchar(30) NOT NULL,
+weekday varchar(30) NOT NULL,
+UNIQUE KEY (weekday), 
+PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 -- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `excercise_day`;
-CREATE TABLE IF NOT EXISTS `excercise_day` (
-`id` varchar(30) NOT NULL,
-`weekday` varchar(30) NOT NULL,
-UNIQUE KEY (`weekday`), 
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+DROP TABLE IF EXISTS exercise_type;
+CREATE TABLE IF NOT EXISTS excercise_type (
+id varchar(30) NOT NULL, -- id === 1 = stamina, id === 2 = strength
+description varchar(30), -- stamina and strength
+UNIQUE KEY (description),
+ PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 -- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `exercise_type`;
-CREATE TABLE IF NOT EXISTS `excercise_type` (
-`id` varchar(30) NOT NULL, -- id === 1 = stamina, id === 2 = strength
-`description` varchar(30), -- stamina and strength
-UNIQUE KEY (`description`),
- PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+DROP TABLE IF EXISTS exercise_name;
+CREATE TABLE IF NOT EXISTS excercise_name (
+id varchar(30) NOT NULL,
+type_id varchar(1) NOT NULL,
+name varchar(30) NOT NULL, -- i.e. treadmill (if type_id === 1) or bench press (if type_id === 2)
+UNIQUE KEY (name),
+ PRIMARY KEY (id),
+ FOREIGN KEY (type_id) REFERENCES excercise_type(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 -- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `exercise_name`;
-CREATE TABLE IF NOT EXISTS `excercise_name` (
-`id` varchar(30) NOT NULL,
-`type_id` varchar(1) NOT NULL,
-`name` varchar(30) NOT NULL, -- i.e. treadmill (if type_id === 1) or bench press (if type_id === 2)
-UNIQUE KEY (`name`),
- PRIMARY KEY (`id`),
- FOREIGN KEY (`type_id`) REFERENCES `excercise_type`(`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+DROP TABLE IF EXISTS exercise;
+CREATE TABLE IF NOT EXISTS excercise (
+id varchar(30) NOT NULL,
+day_id varchar(30) NOT NULL,
+name_id varchar(30) NOT NULL,
+length varchar(30) NOT NULL,
+content varchar(30) NOT NULL,
+ PRIMARY KEY (id),
+ FOREIGN KEY (day_id) REFERENCES excercise_day(id),
+ FOREIGN KEY (name_id) REFERENCES excercise_name(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
--- --------------------------------------------------------
+INSERT INTO excercise_day (id, weekday) VALUES ('1mjbpj', 'Monday');
+INSERT INTO excercise_day (id, weekday) VALUES ('2cmthh', 'Tuesday');
+INSERT INTO excercise_day (id, weekday) VALUES ('38zhx6', 'Wednesday');
+INSERT INTO excercise_day (id, weekday) VALUES ('4f3f58', 'Thrusday');
+INSERT INTO excercise_day (id, weekday) VALUES ('5qigbo', 'Friday');
+INSERT INTO excercise_day (id, weekday) VALUES ('6m2hy2', 'Saturday');
+INSERT INTO excercise_day (id, weekday) VALUES ('7z8akz', 'Sunday');
 
-DROP TABLE IF EXISTS `exercise`;
-CREATE TABLE IF NOT EXISTS `excercise` (
-`id` varchar(30) NOT NULL,
-`day_id` varchar(30) NOT NULL,
-`name_id` varchar(30) NOT NULL,
-`length` varchar(30) NOT NULL,
-`content` varchar(30) NOT NULL,
- PRIMARY KEY (`id`),
- FOREIGN KEY (`day_id`) REFERENCES `excercise_day`(`id`),
- FOREIGN KEY (`name_id`) REFERENCES `excercise_name`(`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+INSERT INTO excercise_type (id, description) VALUES ('1', 'Stamina');
+INSERT INTO excercise_type (id, description) VALUES ('2', 'Strength');
 
--- --------------------------------------------------------
+INSERT INTO excercise_name (id, type_id, name) VALUES ('nsphvoi', '2', 'Bench press');
 
-INSERT INTO `excercise_day` (`id`, `weekday`) VALUES ('1mjbpj', 'Monday');
-INSERT INTO `excercise_day` (`id`, `weekday`) VALUES ('2cmthh', 'Tuesday');
-INSERT INTO `excercise_day` (`id`, `weekday`) VALUES ('38zhx6', 'Wednesday');
-INSERT INTO `excercise_day` (`id`, `weekday`) VALUES ('4f3f58', 'Thrusday');
-INSERT INTO `excercise_day` (`id`, `weekday`) VALUES ('5qigbo', 'Friday');
-INSERT INTO `excercise_day` (`id`, `weekday`) VALUES ('6m2hy2', 'Saturday');
-INSERT INTO `excercise_day` (`id`, `weekday`) VALUES ('7z8akz', 'Sunday');
-
-INSERT INTO `excercise_type` (`id`, `description`) VALUES ('1', 'Stamina');
-INSERT INTO `excercise_type` (`id`, `description`) VALUES ('2', 'Strength');
-
-INSERT INTO `excercise_name` (`id`, `type_id`, `name`) VALUES ('nsphvoi', '2', 'Bench press');
-
-INSERT INTO `excercise` (`id`, `day_id`, `name_id`, `length`, `content`) VALUES ('ea7zd70', '1mjbpj', 'nsphvoi', '4', '3');
-
+INSERT INTO excercise (id, day_id, name_id, length, content) VALUES ('ea7zd70', '1mjbpj', 'nsphvoi', '4', '3');
