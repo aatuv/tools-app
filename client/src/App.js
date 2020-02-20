@@ -10,7 +10,7 @@ function App() {
   function gridRow() {
     return (
       <Fragment>
-        <Grid container flexDirection='row' spacing={3}>
+        <Grid container spacing={3}>
           <Grid item xs={4}>
             <Weather />
           </Grid>
@@ -26,7 +26,7 @@ function App() {
   }
 
   return (
-    <Grid container style={{ backgroundColor: blue[800], minHeight: '100vh' }} flexDirection='column' spacing={2}>
+    <Grid container style={{ backgroundColor: blue[800], minHeight: '100vh', flexDirection: 'column' }} spacing={2}>
       <Grid item xs={12}>
         {gridRow()}
       </Grid>

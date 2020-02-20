@@ -1,6 +1,6 @@
 import React from 'react'
 import { Grid, Typography, Paper } from '@material-ui/core'
-import Day from './TrainingDay.js'
+import TrainingDay from './TrainingDay.js'
 
 function Weekdays(props) {
 
@@ -20,16 +20,13 @@ function Weekdays(props) {
     }
     const schedule = returnSchedule(props.excercises);
     const trainingWeek = () => {
+
         return schedule.map(trainingDay => (
             <Grid item xs key={trainingDay.weekday}>
-                <Day
+                <TrainingDay
                     data={trainingDay}
+                    excerciseNames={props.excerciseNames}
                     classes={props.classes}
-                    anchorEl={props.anchorEl}
-                    currentId={props.currentId}
-                    modalOpen={props.modalOpen}
-                    handleModalOpen={props.handleModalOpen}
-                    handleModalClose={props.handleModalClose}
                 />
             </Grid>
         ));

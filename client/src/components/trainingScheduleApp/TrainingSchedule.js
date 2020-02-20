@@ -9,9 +9,6 @@ function TrainingSchedule() {
     const [excercises, setExcercises] = useState([[{ id: "", weekday: "", name: "", length: "", content: "" }]]);
     const [excerciseNames, setExcerciseNames] = useState([{ name: "", type_id: "" }]);
     const [isLoading, setIsLoading] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [currentId, setCurrentId] = useState(0);
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 
@@ -44,16 +41,6 @@ function TrainingSchedule() {
         return () => { cancelled = true }
     }, []);
 
-    const handleModalOpen = (target, targetId) => {
-        setAnchorEl(target);
-        setCurrentId(targetId);
-        setModalOpen(true);
-    }
-    const handleModalClose = () => {
-        setAnchorEl(null);
-        setCurrentId(0);
-        setModalOpen(false);
-    }
 
     const useStyles = makeStyles(theme => ({
         main: {
@@ -77,19 +64,6 @@ function TrainingSchedule() {
             color: '#ffffff',
             padding: theme.spacing(2)
         },
-        dayPaper: {
-            backgroundColor: blue[400],
-            color: '#ffffff',
-            padding: theme.spacing(2)
-        },
-        item: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-        },
-        typography: {
-            textAlign: 'center'
-        },
         modal: {
             display: 'flex',
             flexDirection: 'column',
@@ -98,11 +72,28 @@ function TrainingSchedule() {
             top: '30%',
             left: '30%',
             width: '20%',
-            height: '20%',
-            border: '2px solid #000',
             boxShadow: theme.shadows[5],
-            backgroundColor: theme.palette.background.paper,
-            padding: theme.spacing(2, 4, 3),
+            backgroundColor: blue[500],
+            color: '#ffffff',
+            padding: theme.spacing(2),
+        },
+        dayPaper: {
+            backgroundColor: blue[300],
+            color: '#ffffff',
+            padding: theme.spacing(2)
+        },
+        formControl: {
+            margin: theme.spacing(1),
+            minWidth: '20%'
+        },
+        item: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            justifyContent: 'center'
+        },
+        typography: {
+            textAlign: 'center'
         },
         popover: {
             pointerEvents: 'none'
@@ -123,11 +114,6 @@ function TrainingSchedule() {
                 excercises={excercises}
                 excerciseNames={excerciseNames}
                 classes={classes}
-                anchorEl={anchorEl}
-                currentId={currentId}
-                modalOpen={modalOpen}
-                handleModalOpen={handleModalOpen}
-                handleModalClose={handleModalClose}
             />
         </Paper>
 }

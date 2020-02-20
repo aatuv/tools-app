@@ -1,10 +1,5 @@
 import React from 'react'
-import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper'
-import Popover from '@material-ui/core/Popover'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import Grid from '@material-ui/core/Grid'
+import { Typography, Paper, Popover, Card, CardContent, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
@@ -36,7 +31,7 @@ export default function ForecastDay({ weather, options, weekdays, handlePopoverC
     const open = handleOpen();
 
     return (
-        <div>
+        <Grid item xs>
             <Paper
                 className={classes.paper}
                 aria-owns={open ? 'mouse-over-popover' : undefined}
@@ -119,6 +114,6 @@ export default function ForecastDay({ weather, options, weekdays, handlePopoverC
                     </CardContent>
                 </Card>
             </Popover>
-        </div>
+        </Grid>
     )
 }

@@ -119,7 +119,6 @@ function Weather() {
         :
         <Paper className={classes.main} elevation={3}>
           <Grid container spacing={3}>
-            {isApiKeyEntered()}
             <Grid item xs={12}>
               <City city={forecastData.city} />
             </Grid>
