@@ -5,7 +5,12 @@ const trainingSchedule = require('./routes/trainingSchedule');
 
 const app = express();
 
-app.use(cors());
+app.use(cors(
+    {
+    origin: "http://localhost:3000",
+    methods: "GET,POST,DELETE"
+}
+));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -26,7 +26,12 @@ function TrainingDay(props) {
                 </Grid>
                 {scheduleOfTheDay()}
             </Grid>
-            <DayModal data={props.data} classes={props.classes} excerciseNames={props.excerciseNames} />
+            <DayModal
+                data={props.data}
+                classes={props.classes}
+                excerciseNames={props.excerciseNames}
+                handleFormData={props.handleFormData}
+            />
         </Paper>
     )
 }
