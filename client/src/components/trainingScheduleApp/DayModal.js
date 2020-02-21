@@ -43,19 +43,15 @@ function DayModal(props) {
             >
                 <div className={props.classes.modal}>
                     <h2 id="simple-modal-title">{props.data.weekday}</h2>
-                    <Grid className={props.classes.dayContainer} container>
+                    <Grid className={props.classes.dayContainer} container spacing={1}>
                         {scheduleOfTheDay()}
                         <Grid item xs={12}>
-<<<<<<< HEAD
                             <NewExcerciseForm
                                 classes={props.classes}
                                 data={props.data}
                                 excerciseNames={props.excerciseNames}
                                 handleFormData={props.handleFormData}
                             />
-=======
-                            <NewExcerciseForm classes={props.classes} data={props.data} excerciseNames={props.excerciseNames} />
->>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                         </Grid>
                     </Grid>
                 </div>

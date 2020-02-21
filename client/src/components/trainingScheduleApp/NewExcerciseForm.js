@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react'
-<<<<<<< HEAD
 import shortid from 'shortid'
-=======
->>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
 import { Modal, Paper, Button, Typography, Grid, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
 
 
@@ -10,17 +7,13 @@ function NewExcerciseForm(props) {
     const [open, setOpen] = useState(false);
     const [selectNameOpen, setSelectNameOpen] = useState(false);
     const [selectTypeOpen, setSelectTypeOpen] = useState(false);
-    const [isStrength, setIsStrength] = useState(null);
+    const [selectIntensityOpen, setSelectIntensityOpen] = useState(false);
     const [type, setType] = useState('');
     const [name, setName] = useState('');
     const [length, setLength] = useState('');
     const [reps, setReps] = useState('');
     const [content, setContent] = useState('');
-    const [formData, setFormData] = useState({ id: "", weekday: "", name: "", length: "", content: "" })
-
-    useEffect(() => {
-
-    })
+    const [intensity, setIntensity] = useState('');
 
     // handle opening and closing the form modal
     const handleOpen = () => setOpen(true);
@@ -36,30 +29,13 @@ function NewExcerciseForm(props) {
     const handleSelectTypeOpen = () => setSelectTypeOpen(true);
     const handleSelectTypeClose = () => setSelectTypeOpen(false);
     const handleTypeChange = event => setType(event.target.value);
+    // handle opening, closing and value change of the select input for intensity level
+    const handleSelectIntensityOpen = () => setSelectIntensityOpen(true);
+    const handleSelectIntensityClose = () => setSelectIntensityOpen(false);
+    const handleIntensityChange = event => setIntensity(event.target.value);
 
-    // set isStrength value to true or false when type changes
-    useEffect(() => {
-        if (type === '1') {
-            setIsStrength(false);
-        } else if (type === '2') {
-            setIsStrength(true);
-        } else setIsStrength(null);
-    }, [type]);
 
-<<<<<<< HEAD
     // set the state for correct field
-=======
-    // dont allow empty input in input fields
-    useEffect(() => {
-        if (length === "") {
-            setLength("0");
-        }
-        if (reps === "") {
-            setReps("0");
-        }
-    }, [length, reps]);
-
->>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
     const setInput = (target, id) => {
         if (id === "sets-input") {
             setLength(target.value);
@@ -95,6 +71,7 @@ function NewExcerciseForm(props) {
         handleClose(event);
     }
 
+    // make sure all fields have valid data before submitting
     const validForm = () => {
         if (type === "1") {
             if (name === "" || length === "" || content === "")
@@ -107,9 +84,15 @@ function NewExcerciseForm(props) {
         }
     }
 
-    // render content according to selected excercise type
+    // show content based on chosen type 
     const returnForm = () => {
-        return isStrength ?
+        return type === '' ? null
+            :
+            staminaOrStrength();
+    }
+    // render content according to selected excercise type
+    const staminaOrStrength = () => {
+        return type === "Strength" ?
             <Grid className={props.classes.dayContainer} container>
                 <Grid className={props.classes.item} item xs={12}>
                     <Typography variant="body1">Name</Typography>
@@ -123,11 +106,9 @@ function NewExcerciseForm(props) {
                             onOpen={handleSelectNameOpen}
                             value={name ? name : ''}
                             onChange={handleNameChange}
-<<<<<<< HEAD
                             error={name === ""}
-=======
->>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                         >
+                            <MenuItem button={true}>New excercise name...</MenuItem>
                             {
                                 props.excerciseNames.map(excerciseName => (
                                     <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
@@ -141,42 +122,27 @@ function NewExcerciseForm(props) {
                     <TextField
                         id="sets-input"
                         label="Sets"
-<<<<<<< HEAD
                         type="tel"
-=======
-                        type="number"
->>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                         value={length}
                         onPaste={e => checkInput(e.target)}
                         onKeyPress={e => checkInput(e.target)}
                         onChange={e => checkInput(e.target)}
-<<<<<<< HEAD
                         error={length === ""}
                         helperText={length === "" ? 'Enter the amount of sets!' : ' '}
-=======
->>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                     />
                 </Grid>
                 <Grid className={props.classes.item} item xs>
                     <Typography variant="body1">Number of reps</Typography>
                     <TextField
                         id="reps-input"
-<<<<<<< HEAD
                         label="Reps"
                         type="tel"
-=======
-                        label="Sets"
-                        type="number"
->>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                         value={reps}
                         onPaste={e => checkInput(e.target)}
                         onKeyPress={e => checkInput(e.target)}
                         onChange={e => checkInput(e.target)}
-<<<<<<< HEAD
-                        error={length === ""}
-                        helperText={length === "" ? 'Enter the amount of reps!' : ' '}
-=======
->>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
+                        error={reps === ""}
+                        helperText={reps === "" ? 'Enter the amount of reps!' : ' '}
                     />
                 </Grid>
             </Grid>
@@ -196,6 +162,7 @@ function NewExcerciseForm(props) {
                             onChange={handleNameChange}
                             error={name === ""}
                         >
+                            <MenuItem button={true}>New excercise name...</MenuItem>
                             {
                                 props.excerciseNames.map(excerciseName => (
                                     <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
@@ -205,32 +172,39 @@ function NewExcerciseForm(props) {
                     </FormControl>
                 </Grid>
                 <Grid className={props.classes.item} item xs>
-                    <Typography variant="body1">Number of sets</Typography>
+                    <Typography variant="body1">Minutes</Typography>
                     <TextField
                         id="sets-input"
-                        label="Sets"
+                        label="Minutes"
                         type="tel"
                         value={length}
                         onPaste={e => checkInput(e.target)}
                         onKeyPress={e => checkInput(e.target)}
                         onChange={e => checkInput(e.target)}
                         error={length === ""}
-                        helperText={length === "" ? 'Enter the amount of sets!' : ' '}
+                        helperText={length === "" ? 'Enter minutes!' : ' '}
                     />
                 </Grid>
                 <Grid className={props.classes.item} item xs>
-                    <Typography variant="body1">Number of reps</Typography>
-                    <TextField
-                        id="reps-input"
-                        label="Sets"
-                        type="tel"
-                        value={reps}
-                        onPaste={e => checkInput(e.target)}
-                        onKeyPress={e => checkInput(e.target)}
-                        onChange={e => checkInput(e.target)}
-                        error={length === ""}
-                        helperText={length === "" ? 'Enter the amount of reps!' : ' '}
-                    />
+                    <Typography variant="body1">Intensity</Typography>
+                    <FormControl className={props.classes.FormControl}>
+                        <InputLabel id="excercise-content-label">Intensity level</InputLabel>
+                        <Select
+                            labelId="excercise-content-label"
+                            id="excercise-content-select"
+                            open={selectIntensityOpen}
+                            onClose={handleSelectIntensityClose}
+                            onOpen={handleSelectIntensityOpen}
+                            value={intensity ? intensity : ''}
+                            onChange={handleIntensityChange}
+                            error={intensity === ""}
+                        >
+                            <MenuItem value={"low"}>low</MenuItem>
+                            <MenuItem value={"moderate"}>moderate</MenuItem>
+                            <MenuItem value={"high"}>high</MenuItem>
+                            <MenuItem value={"interval"}>interval</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Grid>
             </Grid>
     }
