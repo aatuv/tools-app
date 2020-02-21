@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
+<<<<<<< HEAD
 import shortid from 'shortid'
+=======
+>>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
 import { Modal, Paper, Button, Typography, Grid, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
 
 
@@ -43,7 +46,20 @@ function NewExcerciseForm(props) {
         } else setIsStrength(null);
     }, [type]);
 
+<<<<<<< HEAD
     // set the state for correct field
+=======
+    // dont allow empty input in input fields
+    useEffect(() => {
+        if (length === "") {
+            setLength("0");
+        }
+        if (reps === "") {
+            setReps("0");
+        }
+    }, [length, reps]);
+
+>>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
     const setInput = (target, id) => {
         if (id === "sets-input") {
             setLength(target.value);
@@ -107,7 +123,10 @@ function NewExcerciseForm(props) {
                             onOpen={handleSelectNameOpen}
                             value={name ? name : ''}
                             onChange={handleNameChange}
+<<<<<<< HEAD
                             error={name === ""}
+=======
+>>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                         >
                             {
                                 props.excerciseNames.map(excerciseName => (
@@ -122,27 +141,42 @@ function NewExcerciseForm(props) {
                     <TextField
                         id="sets-input"
                         label="Sets"
+<<<<<<< HEAD
                         type="tel"
+=======
+                        type="number"
+>>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                         value={length}
                         onPaste={e => checkInput(e.target)}
                         onKeyPress={e => checkInput(e.target)}
                         onChange={e => checkInput(e.target)}
+<<<<<<< HEAD
                         error={length === ""}
                         helperText={length === "" ? 'Enter the amount of sets!' : ' '}
+=======
+>>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                     />
                 </Grid>
                 <Grid className={props.classes.item} item xs>
                     <Typography variant="body1">Number of reps</Typography>
                     <TextField
                         id="reps-input"
+<<<<<<< HEAD
                         label="Reps"
                         type="tel"
+=======
+                        label="Sets"
+                        type="number"
+>>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                         value={reps}
                         onPaste={e => checkInput(e.target)}
                         onKeyPress={e => checkInput(e.target)}
                         onChange={e => checkInput(e.target)}
+<<<<<<< HEAD
                         error={length === ""}
                         helperText={length === "" ? 'Enter the amount of reps!' : ' '}
+=======
+>>>>>>> 4a72a5f55450a74e5ad0e7f15db598ddd3f12bcd
                     />
                 </Grid>
             </Grid>
