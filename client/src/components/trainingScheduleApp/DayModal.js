@@ -16,11 +16,11 @@ function DayModal(props) {
     // render the schedule for the specific weekday
     const scheduleOfTheDay = () => {
         return props.data.list.map((row) => (
-            <Grid item xs key={row.id}>
+            <Grid item xs={12} key={row.id}>
                 <Paper className={props.classes.dayPaper}>
                     <Typography variant="h6">{row.name}, {row.length}x{row.content}</Typography>
-                    <Button variant="outlined" color="primary">Edit</Button>
-                    <Button variant="outlined" color="secondary">Delete</Button>
+                    <Button className={props.classes.editExcerciseButton} variant="outlined">Edit</Button>
+                    <Button className={props.classes.deleteExcerciseButton} variant="outlined">Delete</Button>
                 </Paper>
             </Grid>
         ))
@@ -43,16 +43,12 @@ function DayModal(props) {
             >
                 <div className={props.classes.modal}>
                     <h2 id="simple-modal-title">{props.data.weekday}</h2>
-                    <Grid className={props.classes.container} container>
+                    <Grid className={props.classes.dayContainer} container>
                         {scheduleOfTheDay()}
+                        <Grid item xs={12}>
+                            <NewExcerciseForm classes={props.classes} data={props.data} excerciseNames={props.excerciseNames} />
+                        </Grid>
                     </Grid>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ color: '#ffffff' }}
-                    >
-                        <NewExcerciseForm classes={props.classes} data={props.data} excerciseNames={props.excerciseNames} />
-                    </Button>
                 </div>
             </Modal>
         </div>

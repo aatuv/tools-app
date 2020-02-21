@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Modal, Button, Typography, Grid, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
+import { Modal, Paper, Button, Typography, Grid, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
 
 
 function NewExcerciseForm(props) {
@@ -37,6 +37,15 @@ function NewExcerciseForm(props) {
         } else setIsStrength(null);
     }, [type]);
 
+    // dont allow empty input in input fields
+    useEffect(() => {
+        if (length === "") {
+            setLength("0");
+        }
+        if (reps === "") {
+            setReps("0");
+        }
+    }, [length, reps]);
 
     const setInput = (target, id) => {
         if (id === "sets-input") {
@@ -62,7 +71,7 @@ function NewExcerciseForm(props) {
         return target;
     }
 
-        const checkInput = (target) => {
+    const checkInput = (target) => {
         target = checkInputFormat(target);
         target = setInput(target, target.id);
         return target;
@@ -75,44 +84,46 @@ function NewExcerciseForm(props) {
                 <Grid className={props.classes.item} item xs={12}>
                     <Typography variant="body1">Excercise</Typography>
                     <FormControl className={props.classes.FormControl}>
-                <InputLabel id="excercise-name-label">Excercise name</InputLabel>
-                <Select
-                    labelId="excercise-name-label"
-                    id="excercise-name-select"
-                    open={selectNameOpen}
-                    onClose={handleSelectNameClose}
-                    onOpen={handleSelectNameOpen}
-                    value={name ? name : ''}
-                    onChange={handleNameChange}
-                >
-                    {
-                        props.excerciseNames.map(excerciseName => (
-                            <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
-                        ))
-                    }
-                </Select>
-            </FormControl>
+                        <InputLabel id="excercise-name-label">Excercise name</InputLabel>
+                        <Select
+                            labelId="excercise-name-label"
+                            id="excercise-name-select"
+                            open={selectNameOpen}
+                            onClose={handleSelectNameClose}
+                            onOpen={handleSelectNameOpen}
+                            value={name ? name : ''}
+                            onChange={handleNameChange}
+                        >
+                            {
+                                props.excerciseNames.map(excerciseName => (
+                                    <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
                 </Grid>
                 <Grid className={props.classes.item} item xs>
                     <Typography variant="body1">Number of sets</Typography>
-                    <TextField 
-                    id="sets-input"
-                    label="Sets"
-                    type="number"
-                    onPaste={e => checkInput(e.target)}
-                    onKeyPress={e => checkInput(e.target)}
-                    onChange={e => checkInput(e.target)}
+                    <TextField
+                        id="sets-input"
+                        label="Sets"
+                        type="number"
+                        value={length}
+                        onPaste={e => checkInput(e.target)}
+                        onKeyPress={e => checkInput(e.target)}
+                        onChange={e => checkInput(e.target)}
                     />
                 </Grid>
                 <Grid className={props.classes.item} item xs>
                     <Typography variant="body1">Number of reps</Typography>
-                    <TextField 
-                    id="reps-input"
-                    label="Sets"
-                    type="number"
-                    onPaste={e => checkInput(e.target)}
-                    onKeyPress={e => checkInput(e.target)}
-                    onChange={e => checkInput(e.target)}
+                    <TextField
+                        id="reps-input"
+                        label="Sets"
+                        type="number"
+                        value={reps}
+                        onPaste={e => checkInput(e.target)}
+                        onKeyPress={e => checkInput(e.target)}
+                        onChange={e => checkInput(e.target)}
                     />
                 </Grid>
             </Grid>
@@ -130,10 +141,12 @@ function NewExcerciseForm(props) {
             </Grid>
     }
     return (
-        <div
-            className={props.classes.paper}
+        <Button
+            variant="outlined"
+            className={props.classes.addExcerciseButton}
             onClick={handleOpen}
         >
+            ADD EXCERCISE
             <Modal
                 id="mouse-click-modal"
                 aria-labelledby="simple-modal-title"
@@ -169,7 +182,7 @@ function NewExcerciseForm(props) {
                     </Button>
                 </div>
             </Modal>
-        </div>
+        </Button>
     );
 }
 export default NewExcerciseForm;

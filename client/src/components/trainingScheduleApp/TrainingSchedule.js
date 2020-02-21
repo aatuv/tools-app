@@ -68,19 +68,34 @@ function TrainingSchedule() {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-evenly',
+            alignItems: 'stretch',
             position: 'absolute',
-            top: '30%',
-            left: '30%',
-            width: '20%',
+            top: '20%',
+            left: '35%',
+            minWidth: '20%',
+            minHeight: '20%',
             boxShadow: theme.shadows[5],
             backgroundColor: blue[500],
             color: '#ffffff',
-            padding: theme.spacing(2),
+            padding: theme.spacing(4, 4, 4),
         },
         dayPaper: {
             backgroundColor: blue[300],
             color: '#ffffff',
-            padding: theme.spacing(2)
+            minWidth: '10vh',
+            padding: theme.spacing(1)
+        },
+        addExcerciseButton: {
+            backgroundColor: '#4caf50',
+            color: '#ffffff'
+        },
+        editExcerciseButton: {
+            backgroundColor: blue[500],
+            color: '#ffffff'
+        },
+        deleteExcerciseButton: {
+            backgroundColor: '#f44336',
+            color: '#ffffff'
         },
         formControl: {
             margin: theme.spacing(1),
