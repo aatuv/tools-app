@@ -9,13 +9,15 @@ function TrainingSchedule() {
     const [excercises, setExcercises] = useState([[{ id: "", weekday: "", name: "", length: "", content: "" }]]);
     const [excerciseNames, setExcerciseNames] = useState([{ name: "", type_id: "" }]);
     const [formData, setFormData] = useState({ id: "", weekday: "", name: "", length: "", content: "" })
+    const [nameData, setNameData] = useState({ id: "", type: "", name: "" })
     const [isLoading, setIsLoading] = useState(false);
     const initialMount = useRef(true);
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-
+    // fetch schedule data on initial load. Otherwise fetch whenever new excercises are added
     useEffect(() => {
         let cancelled = false;
+
         const fetchExcercises = async () => {
             !cancelled && setIsLoading(true)
             try {
@@ -38,31 +40,56 @@ function TrainingSchedule() {
                 !cancelled && setIsLoading(false)
             }
         }
-        fetchExcercises()
-        fetchExcerciseNames()
-        return () => { cancelled = true }
-    }, []);
-
-    useEffect(() => {
+        const insertExcercise = async () => {
+            !cancelled && setIsLoading(true)
+            try {
+                await Axios.post('http://localhost:5000/insertExcercise', formData);
+                !cancelled && fetchExcercises()
+            } catch (err) {
+                console.log(err);
+            } finally {
+                !cancelled && setIsLoading(false)
+            }
+        }
+        const insertExcerciseName = async () => {
+            !cancelled && setIsLoading(true)
+            try {
+                await Axios.post('http://localhost:5000/insertName', nameData);
+                !cancelled && fetchExcerciseNames()
+            } catch (err) {
+                console.log(err);
+            } finally {
+                !cancelled && setIsLoading(false)
+            }
+        }
         if (initialMount.current) {
             initialMount.current = false;
+            fetchExcercises();
+            fetchExcerciseNames();
         } else {
-            Axios.post('http://localhost:5000/insertExcercise', formData)
-                .then(response => {
-                    console.log(response);
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+            cancelled = false;
+            if (formData.id !== "") {
+                insertExcercise();
+            }
+            if (nameData.id !== "") {
+                insertExcerciseName();
+            }
         }
-    }, [formData])
+        return () => { cancelled = true }
+    }, [formData, nameData])
 
+    // set new excercise form
     const handleFormData = (form) => {
         setFormData(form);
     }
+    // set new excercise name
+    const handleNameData = (form) => {
+        setNameData(form);
+    }
+
+    // css properties for the components
     const useStyles = makeStyles(theme => ({
         main: {
-            minHeight: '100%',
             padding: theme.spacing(2),
             backgroundColor: blue[700],
             color: blue[50]
@@ -70,7 +97,6 @@ function TrainingSchedule() {
         container: {
             justifyContent: 'center',
             alignItems: 'center',
-            minHeight: '100%'
         },
         dayContainer: {
             flexDirection: 'column',
@@ -96,6 +122,19 @@ function TrainingSchedule() {
             backgroundColor: blue[500],
             color: '#ffffff',
             padding: theme.spacing(4, 4, 4),
+        },
+        newNameModal: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            position: 'absolute',
+            top: '40%',
+            left: '35%',
+            boxShadow: theme.shadows[5],
+            backgroundColor: blue[500],
+            color: '#ffffff',
+            padding: theme.spacing(4, 4, 4)
         },
         dayPaper: {
             backgroundColor: blue[300],
@@ -148,6 +187,7 @@ function TrainingSchedule() {
                 excerciseNames={excerciseNames}
                 classes={classes}
                 handleFormData={handleFormData}
+                handleNameData={handleNameData}
             />
         </Paper>
 }

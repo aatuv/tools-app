@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Typography, Grid, Paper } from '@material-ui/core'
 import DayModal from './DayModal.js'
 
 function TrainingDay(props) {
-
     // show schedule for the day as a preview
     const scheduleOfTheDay = () => {
         return props.data.list.map((row) => (
@@ -31,6 +30,7 @@ function TrainingDay(props) {
                 classes={props.classes}
                 excerciseNames={props.excerciseNames}
                 handleFormData={props.handleFormData}
+                handleNameData={props.handleNameData}
             />
         </Paper>
     )

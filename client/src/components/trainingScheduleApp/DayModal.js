@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { Modal, Button, Typography, Grid, Paper } from '@material-ui/core'
 import NewExcerciseForm from './NewExcerciseForm.js'
 
-
-function DayModal(props) {
+function DayModal (props) {
     const [open, setOpen] = useState(false);
 
     // handle opening and closing of this modal
@@ -39,7 +38,7 @@ function DayModal(props) {
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
                 open={open}
-                onClose={event => { handleClose(event) }}
+                onClose={event => handleClose(event)}
             >
                 <div className={props.classes.modal}>
                     <h2 id="simple-modal-title">{props.data.weekday}</h2>
@@ -51,6 +50,7 @@ function DayModal(props) {
                                 data={props.data}
                                 excerciseNames={props.excerciseNames}
                                 handleFormData={props.handleFormData}
+                                handleNameData={props.handleNameData}
                             />
                         </Grid>
                     </Grid>

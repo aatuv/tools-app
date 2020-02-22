@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import shortid from 'shortid'
-import { Modal, Paper, Button, Typography, Grid, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
+import { Modal, Paper, Button, ButtonBase, Typography, Grid, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
+import NewExcerciseName from './newExcerciseName.js';
 
 
 function NewExcerciseForm(props) {
@@ -14,6 +15,7 @@ function NewExcerciseForm(props) {
     const [reps, setReps] = useState('');
     const [content, setContent] = useState('');
     const [intensity, setIntensity] = useState('');
+
 
     // handle opening and closing the form modal
     const handleOpen = () => setOpen(true);
@@ -92,7 +94,7 @@ function NewExcerciseForm(props) {
     }
     // render content according to selected excercise type
     const staminaOrStrength = () => {
-        return type === "Strength" ?
+        return type === "2" ?
             <Grid className={props.classes.dayContainer} container>
                 <Grid className={props.classes.item} item xs={12}>
                     <Typography variant="body1">Name</Typography>
@@ -108,11 +110,19 @@ function NewExcerciseForm(props) {
                             onChange={handleNameChange}
                             error={name === ""}
                         >
-                            <MenuItem button={true}>New excercise name...</MenuItem>
+                            <NewExcerciseName
+                                classes={props.classes}
+                                handleNameData={props.handleNameData}
+                                type={type}
+                            />
                             {
-                                props.excerciseNames.map(excerciseName => (
-                                    <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
-                                ))
+                                props.excerciseNames.map(excerciseName => {
+                                    if (excerciseName.type_id === "2") {
+                                        return (
+                                            <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
+                                        )
+                                    }
+                                })
                             }
                         </Select>
                     </FormControl>
@@ -162,11 +172,20 @@ function NewExcerciseForm(props) {
                             onChange={handleNameChange}
                             error={name === ""}
                         >
-                            <MenuItem button={true}>New excercise name...</MenuItem>
+                            <NewExcerciseName
+                                classes={props.classes}
+                                handleNameData={props.handleNameData}
+                                type={type}
+
+                            />
                             {
-                                props.excerciseNames.map(excerciseName => (
-                                    <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
-                                ))
+                                props.excerciseNames.map(excerciseName => {
+                                    if (excerciseName.type_id === "1") {
+                                        return (
+                                            <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
+                                        )
+                                    }
+                                })
                             }
                         </Select>
                     </FormControl>
@@ -216,14 +235,13 @@ function NewExcerciseForm(props) {
         >
             ADD EXCERCISE
             <Modal
-                id="mouse-click-modal"
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
+                id="add-excercise-modal"
+                aria-labelledby="add-excercise-title"
                 open={open}
-                onClose={event => { handleClose(event) }}
+                onClose={event => handleClose(event)}
             >
                 <div className={props.classes.modal}>
-                    <h2 id="simple-modal-title">New excercise</h2>
+                    <h2 id="add-excercise-title">New excercise</h2>
                     <Typography variant="body1">Type</Typography>
                     <FormControl className={props.classes.FormControl}>
                         <InputLabel id="excercise-type-label">Excercise type</InputLabel>

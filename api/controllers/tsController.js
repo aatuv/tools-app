@@ -83,10 +83,7 @@ const fetchNames = (req, res) => {
 const insertName = (req, res) => {
     connection.query(
         `INSERT INTO excercise_name (id, type_id, name)
-            VALUES (?, 
-            (SELECT FROM excercise_type
-            WHERE id = ?),
-            ?)`, [req.body.id, req.body.type, req.body.name],
+            VALUES (?, ?, ?)`, [req.body.id, req.body.type, req.body.name],
         (error, results, fields) => {
             if (error) throw error;
             else {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Grid, Typography, Paper } from '@material-ui/core'
 import TrainingDay from './TrainingDay.js'
 
@@ -7,11 +7,11 @@ function Weekdays(props) {
     const returnSchedule = (excercises) => {
         let dailySchedule = [];
         for (let i = 0; i < props.weekdays.length; i++) {
-            let day = {weekday: '', list: []};
+            let day = { weekday: '', list: [] };
             for (let j = 0; j < excercises.length; j++) {
                 if (excercises[j].weekday === props.weekdays[i]) {
                     day.list.push(excercises[j]);
-                }     
+                }
             }
             day.weekday = props.weekdays[i];
             dailySchedule.push(day);
@@ -28,6 +28,7 @@ function Weekdays(props) {
                     excerciseNames={props.excerciseNames}
                     classes={props.classes}
                     handleFormData={props.handleFormData}
+                    handleNameData={props.handleNameData}
                 />
             </Grid>
         ));

@@ -26,12 +26,14 @@ function App() {
   }
 
   return (
-    <Grid container style={{ backgroundColor: blue[800], minHeight: '100vh', flexDirection: 'column' }} spacing={2}>
+    <Grid container style={{ backgroundColor: blue[800], minHeight: '100vh', minWidth: '100vh'}} direction="column" spacing={6}>
       <Grid item xs={12}>
         {gridRow()}
       </Grid>
       <Grid item xs={12}>
+        <Fragment>
         <TrainingSchedule />
+        </Fragment>
       </Grid>
     </Grid>
   )
