@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Grid, Typography, Paper } from '@material-ui/core'
+import React from 'react'
+import { Grid } from '@material-ui/core'
 import TrainingDay from './TrainingDay.js'
 
 function Weekdays(props) {

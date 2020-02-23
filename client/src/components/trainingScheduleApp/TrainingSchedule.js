@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Axios from 'axios'
-import { Grid, Paper, CircularProgress } from '@material-ui/core'
+import { Paper, CircularProgress } from '@material-ui/core'
 import Weekdays from './Weekdays.js'
 import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
 function TrainingSchedule() {
+    const initialForm = { form: { id: "", weekday: "", name: "", length: "", content: "" }, name: { id: "", type: "", name: "" } };
     const [excercises, setExcercises] = useState([[{ id: "", weekday: "", name: "", length: "", content: "" }]]);
     const [excerciseNames, setExcerciseNames] = useState([{ name: "", type_id: "" }]);
-    const [formData, setFormData] = useState({ id: "", weekday: "", name: "", length: "", content: "" })
-    const [nameData, setNameData] = useState({ id: "", type: "", name: "" })
+    const [formData, setFormData] = useState(initialForm);
     const [isLoading, setIsLoading] = useState(false);
     const initialMount = useRef(true);
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -43,7 +43,7 @@ function TrainingSchedule() {
         const insertExcercise = async () => {
             !cancelled && setIsLoading(true)
             try {
-                await Axios.post('http://localhost:5000/insertExcercise', formData);
+                await Axios.post('http://localhost:5000/insertExcercise', formData.form);
                 !cancelled && fetchExcercises()
             } catch (err) {
                 console.log(err);
@@ -51,11 +51,11 @@ function TrainingSchedule() {
                 !cancelled && setIsLoading(false)
             }
         }
-        const insertExcerciseName = async () => {
+        const insertExcerciseWithNewName = async () => {
             !cancelled && setIsLoading(true)
             try {
-                await Axios.post('http://localhost:5000/insertName', nameData);
-                !cancelled && fetchExcerciseNames()
+                await Axios.post('http://localhost:5000/insertExcerciseWithNewName', formData);
+                !cancelled && fetchExcercises()
             } catch (err) {
                 console.log(err);
             } finally {
@@ -68,23 +68,27 @@ function TrainingSchedule() {
             fetchExcerciseNames();
         } else {
             cancelled = false;
-            if (formData.id !== "") {
-                insertExcercise();
-            }
-            if (nameData.id !== "") {
-                insertExcerciseName();
+            if (formData.form.id !== "") {
+                if (formData.form.name !== "" && !excerciseNames.includes(formData.form.name)) {
+                    insertExcerciseWithNewName();
+                    setFormData(initialForm);
+                } else {
+                    insertExcercise();
+                    fetchExcerciseNames();
+                    setFormData(initialForm);
+                }
+            } else {
+                fetchExcercises();
+                fetchExcerciseNames();
             }
         }
         return () => { cancelled = true }
-    }, [formData, nameData])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formData])
 
     // set new excercise form
     const handleFormData = (form) => {
         setFormData(form);
-    }
-    // set new excercise name
-    const handleNameData = (form) => {
-        setNameData(form);
     }
 
     // css properties for the components
@@ -130,7 +134,7 @@ function TrainingSchedule() {
             alignItems: 'center',
             position: 'absolute',
             top: '40%',
-            left: '35%',
+            left: '15%',
             boxShadow: theme.shadows[5],
             backgroundColor: blue[500],
             color: '#ffffff',
@@ -187,7 +191,6 @@ function TrainingSchedule() {
                 excerciseNames={excerciseNames}
                 classes={classes}
                 handleFormData={handleFormData}
-                handleNameData={handleNameData}
             />
         </Paper>
 }

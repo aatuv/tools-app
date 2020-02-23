@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import shortid from 'shortid'
-import { Modal, Paper, Button, ButtonBase, Typography, Grid, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
+import { Modal, Button, Typography, Grid, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
 import NewExcerciseName from './newExcerciseName.js';
-
 
 function NewExcerciseForm(props) {
     const [open, setOpen] = useState(false);
@@ -13,8 +12,8 @@ function NewExcerciseForm(props) {
     const [name, setName] = useState('');
     const [length, setLength] = useState('');
     const [reps, setReps] = useState('');
-    const [content, setContent] = useState('');
     const [intensity, setIntensity] = useState('');
+    const [newName, setNewName] = useState('');
 
 
     // handle opening and closing the form modal
@@ -30,7 +29,13 @@ function NewExcerciseForm(props) {
     // handle opening, closing and value change of the select input for excercise type
     const handleSelectTypeOpen = () => setSelectTypeOpen(true);
     const handleSelectTypeClose = () => setSelectTypeOpen(false);
-    const handleTypeChange = event => setType(event.target.value);
+    const handleTypeChange = event => {
+        setType(event.target.value);
+        setName('');
+        setLength('');
+        setReps('');
+        setIntensity('');
+    }
     // handle opening, closing and value change of the select input for intensity level
     const handleSelectIntensityOpen = () => setSelectIntensityOpen(true);
     const handleSelectIntensityClose = () => setSelectIntensityOpen(false);
@@ -76,7 +81,7 @@ function NewExcerciseForm(props) {
     // make sure all fields have valid data before submitting
     const validForm = () => {
         if (type === "1") {
-            if (name === "" || length === "" || content === "")
+            if (name === "" || length === "" || intensity === "")
                 return true;
             else return false;
         } else {
@@ -106,6 +111,7 @@ function NewExcerciseForm(props) {
                             open={selectNameOpen}
                             onClose={handleSelectNameClose}
                             onOpen={handleSelectNameOpen}
+                            onMouseMove={console.log("focus selected")}
                             value={name ? name : ''}
                             onChange={handleNameChange}
                             error={name === ""}
@@ -113,8 +119,13 @@ function NewExcerciseForm(props) {
                             <NewExcerciseName
                                 classes={props.classes}
                                 handleNameData={props.handleNameData}
-                                type={type}
+                                setNewName={setNewName}
+                                newName={newName}
                             />
+                            {
+                                newName !== "" ? <MenuItem value={newName}>{newName}</MenuItem>
+                                    : null
+                            }
                             {
                                 props.excerciseNames.map(excerciseName => {
                                     if (excerciseName.type_id === "2") {
@@ -122,6 +133,7 @@ function NewExcerciseForm(props) {
                                             <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
                                         )
                                     }
+                                    else return null;
                                 })
                             }
                         </Select>
@@ -160,7 +172,7 @@ function NewExcerciseForm(props) {
             <Grid className={props.classes.dayContainer} container>
                 <Grid className={props.classes.item} item xs={12}>
                     <Typography variant="body1">Excercise</Typography>
-                    <FormControl className={props.classes.FormControl}>
+                    <FormControl className={props.classes.FormControl} disableAutoFocus={true}>
                         <InputLabel id="excercise-name-label">Excercise name</InputLabel>
                         <Select
                             labelId="excercise-name-label"
@@ -169,15 +181,20 @@ function NewExcerciseForm(props) {
                             onClose={handleSelectNameClose}
                             onOpen={handleSelectNameOpen}
                             value={name ? name : ''}
+                            disableAutoFocus={true}
                             onChange={handleNameChange}
                             error={name === ""}
                         >
                             <NewExcerciseName
                                 classes={props.classes}
                                 handleNameData={props.handleNameData}
-                                type={type}
-
+                                setNewName={setNewName}
+                                newName={newName}
                             />
+                            {
+                                newName !== "" ? <MenuItem value={newName}>{newName}</MenuItem>
+                                    : null
+                            }
                             {
                                 props.excerciseNames.map(excerciseName => {
                                     if (excerciseName.type_id === "1") {
@@ -185,6 +202,7 @@ function NewExcerciseForm(props) {
                                             <MenuItem key={excerciseName.name} value={excerciseName.name}>{excerciseName.name}</MenuItem>
                                         )
                                     }
+                                    else return null;
                                 })
                             }
                         </Select>
@@ -266,18 +284,26 @@ function NewExcerciseForm(props) {
                         style={{ color: '#ffffff' }}
                         onClick={event => handleSubmit(event,
                             {
-                                id: shortid.generate(),
-                                weekday: props.data.weekday,
-                                name: name,
-                                length: length,
-                                content: type === "1" ? content : reps
-                            })}
+                                form: {
+                                    id: shortid.generate(),
+                                    weekday: props.data.weekday,
+                                    name: name,
+                                    length: length,
+                                    content: type === "1" ? intensity : reps
+                                },
+                                name: {
+                                    id: shortid.generate(),
+                                    type: type,
+                                    name: newName
+                                }
+                            }
+                        )}
                     >
                         Confirm
                     </Button>
                 </div>
             </Modal>
-        </Button>
+        </Button >
     );
 }
 export default NewExcerciseForm;

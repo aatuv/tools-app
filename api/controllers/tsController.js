@@ -79,11 +79,20 @@ const fetchNames = (req, res) => {
             }
         });
 }
-// router.route(/insertName).post()
-const insertName = (req, res) => {
-    connection.query(
-        `INSERT INTO excercise_name (id, type_id, name)
-            VALUES (?, ?, ?)`, [req.body.id, req.body.type, req.body.name],
+// router.route(/insertExcerciseWithNewName).post()
+const insertExcerciseWithNewName = (req, res) => {
+    let query1 = 
+    `INSERT INTO excercise_name (id, type_id, name)
+     VALUES (?, ?, ?)`;
+    let query2 = 
+    `INSERT INTO excercise (id, day_id, name_id, length, content)
+     VALUES (?,
+         (SELECT id from excercise_day
+             WHERE weekday = ?),
+         (SELECT id from excercise_name
+             WHERE name = ?), 
+        ?, ?)`;
+    connection.query(query1 + ";" + query2, [req.body.name.id, req.body.name.type, req.body.name.name, req.body.form.id, req.body.form.weekday, req.body.form.name, req.body.form.length, req.body.form.content],
         (error, results, fields) => {
             if (error) throw error;
             else {
@@ -104,4 +113,4 @@ const deleteName = (req, res) => {
         });
 }
 
-module.exports = { fetchSchedule, updateExcercise, insertExcercise, deleteExcercise, fetchNames, insertName, deleteName };
+module.exports = { fetchSchedule, updateExcercise, insertExcercise, deleteExcercise, fetchNames, insertExcerciseWithNewName, deleteName };

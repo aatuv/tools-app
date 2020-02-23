@@ -56,6 +56,7 @@ function Clock() {
         if (initialMount.current) {
             initialMount.current = false;
         } else setDegrees({ sec: degrees.sec + 6, min: degrees.min + 0.1, hr: degrees.hr + 0.0083 });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [seconds]);
 
     const useStyles = makeStyles(theme => ({

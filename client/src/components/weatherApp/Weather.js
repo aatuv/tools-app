@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
 import City from './City.js'
 import { makeStyles } from '@material-ui/core/styles'
@@ -15,7 +15,6 @@ function Weather() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentId, setCurrentId] = useState(0);
   const [apiKey, setApiKey] = useState(localStorage.getItem('localApiKey') || '');
-  const initialMount = useRef(true);
 
   // fetch weather data on initial load
   useEffect(() => {
@@ -54,7 +53,7 @@ function Weather() {
     fetchWData()
     fetchFData()
     return () => { cancelled = true }
-  }, [apiKey]);
+  }, [apiKey, weatherData.dt]);
 
   // handle the showing of daily forecasts as a popover
   const handlePopoverOpen = (target, targetId) => {

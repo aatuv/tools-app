@@ -7,7 +7,7 @@ router.route('/updateExcercise').post(tsController.updateExcercise);
 router.route('/insertExcercise').post(tsController.insertExcercise);
 router.route('/deleteExcercise').delete(tsController.deleteExcercise);
 router.route('/excerciseNames').get(tsController.fetchNames);
-router.route('/insertName').post(tsController.insertName);
+router.route('/insertExcerciseWithNewName').post(tsController.insertExcerciseWithNewName);
 router.route('/deleteName').delete(tsController.deleteName);
 
 module.exports = router;
