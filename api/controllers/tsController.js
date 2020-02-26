@@ -70,7 +70,7 @@ const deleteExcercise = (req, res) => {
 // router.route(/excerciseNames).get()
 const fetchNames = (req, res) => {
     connection.query(
-        `SELECT name, type_id
+        `SELECT id, name, type_id
         FROM excercise_name`,
         (error, results) => {
             if (error) throw error
