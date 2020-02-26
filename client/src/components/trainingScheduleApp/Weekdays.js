@@ -28,7 +28,6 @@ function Weekdays(props) {
                     excerciseNames={props.excerciseNames}
                     classes={props.classes}
                     handleFormData={props.handleFormData}
-                    handleNameData={props.handleNameData}
                 />
             </Grid>
         ));

@@ -1,5 +1,5 @@
 import React, { useState, forwardRef, useRef } from 'react'
-import { Button, TextField, Modal, MenuItem } from '@material-ui/core'
+import { MenuItem } from '@material-ui/core'
 import InputModal from './InputModal.js'
 
 const NewExcerciseName = forwardRef((props, ref) => {
@@ -19,7 +19,14 @@ const NewExcerciseName = forwardRef((props, ref) => {
             value={props.newName}
         >
             Add new excercise name...
-            <InputModal classes={props.classes} handleOpen={handleOpen} handleClose={handleClose} open={open} />
+            <InputModal
+                classes={props.classes}
+                setNewName={props.setNewName}
+                handleOpen={handleOpen}
+                handleClose={handleClose}
+                excerciseNames={props.excerciseNames}
+                open={open}
+            />
         </MenuItem>
         : null
 

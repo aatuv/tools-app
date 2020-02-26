@@ -18,8 +18,8 @@ function DayModal (props) {
             <Grid item xs={12} key={row.id}>
                 <Paper className={props.classes.dayPaper}>
                     <Typography variant="h6">{row.name}, {row.length}x{row.content}</Typography>
-                    <Button className={props.classes.editExcerciseButton} variant="outlined">Edit</Button>
-                    <Button className={props.classes.deleteExcerciseButton} variant="outlined">Delete</Button>
+                    <Button className={props.classes.generalButton2} variant="outlined">Edit</Button>
+                    <Button className={props.classes.declineButton} variant="outlined">Delete</Button>
                 </Paper>
             </Grid>
         ))
@@ -50,7 +50,6 @@ function DayModal (props) {
                                 data={props.data}
                                 excerciseNames={props.excerciseNames}
                                 handleFormData={props.handleFormData}
-                                handleNameData={props.handleNameData}
                             />
                         </Grid>
                     </Grid>

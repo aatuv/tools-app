@@ -16,73 +16,94 @@ function TrainingSchedule() {
 
     // fetch schedule data on initial load. Otherwise fetch whenever new excercises are added
     useEffect(() => {
-        let cancelled = false;
+        // * define functions for fetching/inserting data
+        const insertExcercise = () => {
+            Axios.post('http://localhost:5000/insertExcercise', formData.form)
+                .then(response => {
+                    console.log(response.data);
+                    setFormData(initialForm);
+                })
+                .catch(error => {
+                    console.lof(error.response.data);
+                });
+        }
+        const insertExcerciseWithNewName = () => {
+            Axios.post('http://localhost:5000/insertExcerciseWithNewName', formData)
+                .then(response => {
+                    console.log(response.data);
+                    setFormData(initialForm);
+                })
+                .catch(error => {
+                    console.lof(error.response.data);
+                });
+        }
+        const fetchExcercises = () => {
+            // if insert is true, inserting data was succesful and thus excercise data may be fetched
+            Axios.get('http://localhost:5000/schedule')
+                .then(response => {
+                    console.log(response.data);
+                    setExcercises(response.data);
+                })
+                .catch(error => {
+                    console.log(error.response.data);
+                });
+        }
+        const fetchExcerciseNames = () => {
+            Axios.get('http://localhost:5000/excerciseNames')
+                .then(response => {
+                    console.log(response.data);
+                    setExcerciseNames(response.data);
+                })
+                .catch(error => {
+                    console.log(error.response.data);
+                })
+        }
 
-        const fetchExcercises = async () => {
-            !cancelled && setIsLoading(true)
-            try {
-                const response = await Axios.get('http://localhost:5000/schedule');
-                !cancelled && setExcercises(await response.data)
-            } catch (err) {
-                console.log(err);
-            } finally {
-                !cancelled && setIsLoading(false)
-            }
+        // gets called, when there's a new name to be inserted with the new excercise
+        const insertNameAndFetch = async () => {
+            setIsLoading(true);
+            const insert = await insertExcerciseWithNewName();
+            const fetche = await fetchExcercises(insert);
+            const fetchn = await fetchExcerciseNames(fetche);
+            console.log(fetchn);
+            setIsLoading(false);
         }
-        const fetchExcerciseNames = async () => {
-            !cancelled && setIsLoading(true)
-            try {
-                const response = await Axios.get('http://localhost:5000/excerciseNames');
-                !cancelled && setExcerciseNames(await response.data)
-            } catch (err) {
-                console.log(err);
-            } finally {
-                !cancelled && setIsLoading(false)
-            }
+
+        // gets called, when there's a new excercise to be inserted
+        const insertAndFetch = async () => {
+            setIsLoading(true);
+            const insert = await insertExcercise();
+            const fetche = await fetchExcercises(insert);
+            const fetchn = await fetchExcerciseNames(fetche);
+            console.log(fetchn);
+            setIsLoading(false);
         }
-        const insertExcercise = async () => {
-            !cancelled && setIsLoading(true)
-            try {
-                await Axios.post('http://localhost:5000/insertExcercise', formData.form);
-                !cancelled && fetchExcercises()
-            } catch (err) {
-                console.log(err);
-            } finally {
-                !cancelled && setIsLoading(false)
-            }
+
+        // gets called on initial page load
+        const fetch = async () => {
+            setIsLoading(true);
+            const fetche = await fetchExcercises(true);
+            const fetchn = await fetchExcerciseNames(fetche);
+            console.log(fetchn);
+            setIsLoading(false);
         }
-        const insertExcerciseWithNewName = async () => {
-            !cancelled && setIsLoading(true)
-            try {
-                await Axios.post('http://localhost:5000/insertExcerciseWithNewName', formData);
-                !cancelled && fetchExcercises()
-            } catch (err) {
-                console.log(err);
-            } finally {
-                !cancelled && setIsLoading(false)
-            }
-        }
+
+        // handle logic to insert and fetch data properly
         if (initialMount.current) {
             initialMount.current = false;
-            fetchExcercises();
-            fetchExcerciseNames();
+            fetch();
         } else {
-            cancelled = false;
             if (formData.form.id !== "") {
-                if (formData.form.name !== "" && !excerciseNames.includes(formData.form.name)) {
-                    insertExcerciseWithNewName();
-                    setFormData(initialForm);
+                if (formData.name.id !== "" && excerciseNames.includes(formData.name.name) === false) {
+                    console.log("first if reached");
+                    insertNameAndFetch();
                 } else {
-                    insertExcercise();
-                    fetchExcerciseNames();
-                    setFormData(initialForm);
+                    insertAndFetch();
                 }
             } else {
-                fetchExcercises();
-                fetchExcerciseNames();
+                fetch();
             }
         }
-        return () => { cancelled = true }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formData])
 
@@ -146,15 +167,15 @@ function TrainingSchedule() {
             minWidth: '10vh',
             padding: theme.spacing(1)
         },
-        addExcerciseButton: {
-            backgroundColor: '#4caf50',
+        generalButton1: {
+            backgroundColor: blue[300],
             color: '#ffffff'
         },
-        editExcerciseButton: {
+        generalButton2: {
             backgroundColor: blue[500],
             color: '#ffffff'
         },
-        deleteExcerciseButton: {
+        declineButton: {
             backgroundColor: '#f44336',
             color: '#ffffff'
         },

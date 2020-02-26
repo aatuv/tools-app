@@ -8,12 +8,14 @@ function NewExcerciseForm(props) {
     const [selectNameOpen, setSelectNameOpen] = useState(false);
     const [selectTypeOpen, setSelectTypeOpen] = useState(false);
     const [selectIntensityOpen, setSelectIntensityOpen] = useState(false);
+    const [nameInputOpen, setNameInputOpen] = useState(false);
     const [type, setType] = useState('');
     const [name, setName] = useState('');
     const [length, setLength] = useState('');
     const [reps, setReps] = useState('');
     const [intensity, setIntensity] = useState('');
     const [newName, setNewName] = useState('');
+    const [nameInput, setNameInput] = useState('');
 
 
     // handle opening and closing the form modal
@@ -40,6 +42,26 @@ function NewExcerciseForm(props) {
     const handleSelectIntensityOpen = () => setSelectIntensityOpen(true);
     const handleSelectIntensityClose = () => setSelectIntensityOpen(false);
     const handleIntensityChange = event => setIntensity(event.target.value);
+
+    const handleNameInputOpen = (event) => {
+        console.log("handler reached");
+        event.stopPropagation();
+        setNameInputOpen(true);
+    }
+    const handleNameInputClose = () => {
+        setNewName("");
+        setNameInputOpen(false);
+    }
+    const handleNameInputChange = event => setNameInput(event.target.value);
+    const handleNameInputError = () => {
+        if (nameInput === "") return true;
+        if (props.excerciseNames.includes(nameInput)) return true;
+        return false;
+    }
+    const handleNameInputSubmit = (value) => {
+        setNewName(value);
+        setNameInputOpen(false);
+    }
 
 
     // set the state for correct field
@@ -75,6 +97,7 @@ function NewExcerciseForm(props) {
 
     const handleSubmit = (event, form) => {
         props.handleFormData(form);
+        setNewName("");
         handleClose(event);
     }
 
@@ -91,6 +114,12 @@ function NewExcerciseForm(props) {
         }
     }
 
+    const validNameInput = () => {
+        if (nameInput !== "" && props.excerciseNames.includes(nameInput) === false)
+            return true;
+        else return false;
+    }
+
     // show content based on chosen type 
     const returnForm = () => {
         return type === '' ? null
@@ -99,10 +128,49 @@ function NewExcerciseForm(props) {
     }
     // render content according to selected excercise type
     const staminaOrStrength = () => {
-        return type === "2" ?
+        return type === "2" ? // TYPE = STRENGTH
             <Grid className={props.classes.dayContainer} container>
                 <Grid className={props.classes.item} item xs={12}>
                     <Typography variant="body1">Name</Typography>
+                    {
+                        nameInputOpen ?
+                            <div>
+                                <TextField
+                                    id="name-input"
+                                    label="Name"
+                                    type="text"
+                                    value={nameInput}
+                                    onChange={event => handleNameInputChange(event)}
+                                    error={handleNameInputError ? true : false}
+                                    helperText={nameInput === "" ? 'Enter excercise name!' : ''}
+                                />
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    style={{ color: '#ffffff' }}
+                                    onClick={handleNameInputClose}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    disabled={validNameInput() ? false : true}
+                                    style={{ color: '#ffffff' }}
+                                    onClick={() => handleNameInputSubmit(nameInput)}
+                                >
+                                    Confirm
+                                </Button>
+                            </div>
+                            : null
+                    }
+                    <Button
+                        variant="outlined"
+                        className={props.classes.generalButton1}
+                        onClick={handleNameInputOpen}
+                    >
+                        ADD NEW EXCERCISE NAME
+                    </Button>
                     <FormControl className={props.classes.FormControl}>
                         <InputLabel id="excercise-name-label">Excercise name</InputLabel>
                         <Select
@@ -116,12 +184,6 @@ function NewExcerciseForm(props) {
                             onChange={handleNameChange}
                             error={name === ""}
                         >
-                            <NewExcerciseName
-                                classes={props.classes}
-                                handleNameData={props.handleNameData}
-                                setNewName={setNewName}
-                                newName={newName}
-                            />
                             {
                                 newName !== "" ? <MenuItem value={newName}>{newName}</MenuItem>
                                     : null
@@ -168,11 +230,50 @@ function NewExcerciseForm(props) {
                     />
                 </Grid>
             </Grid>
-            :
+            : // TYPE = STAMINA
             <Grid className={props.classes.dayContainer} container>
                 <Grid className={props.classes.item} item xs={12}>
-                    <Typography variant="body1">Excercise</Typography>
-                    <FormControl className={props.classes.FormControl} disableAutoFocus={true}>
+                    <Typography variant="body1">Name</Typography>
+                    {
+                        nameInputOpen ?
+                            <div>
+                                <TextField
+                                    id="name-input"
+                                    label="Name"
+                                    type="text"
+                                    value={nameInput}
+                                    onChange={event => handleNameInputChange(event)}
+                                    error={handleNameInputError ? true : false}
+                                    helperText={nameInput === "" ? 'Enter excercise name!' : ''}
+                                />
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    style={{ color: '#ffffff' }}
+                                    onClick={handleNameInputClose}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    disabled={validNameInput() ? false : true}
+                                    style={{ color: '#ffffff' }}
+                                    onClick={() => handleNameInputSubmit(nameInput)}
+                                >
+                                    Confirm
+                                </Button>
+                            </div>
+                            : null
+                    }
+                    <Button
+                        variant="contained"
+                        className={props.classes.generalButton2}
+                        onClick={handleNameInputOpen}
+                    >
+                        ADD NEW EXCERCISE NAME
+                    </Button>
+                    <FormControl className={props.classes.FormControl}>
                         <InputLabel id="excercise-name-label">Excercise name</InputLabel>
                         <Select
                             labelId="excercise-name-label"
@@ -185,12 +286,6 @@ function NewExcerciseForm(props) {
                             onChange={handleNameChange}
                             error={name === ""}
                         >
-                            <NewExcerciseName
-                                classes={props.classes}
-                                handleNameData={props.handleNameData}
-                                setNewName={setNewName}
-                                newName={newName}
-                            />
                             {
                                 newName !== "" ? <MenuItem value={newName}>{newName}</MenuItem>
                                     : null
@@ -248,7 +343,7 @@ function NewExcerciseForm(props) {
     return (
         <Button
             variant="outlined"
-            className={props.classes.addExcerciseButton}
+            className={props.classes.generalButton1}
             onClick={handleOpen}
         >
             ADD EXCERCISE
@@ -278,10 +373,9 @@ function NewExcerciseForm(props) {
                     </FormControl>
                     {returnForm()}
                     <Button
-                        variant="contained"
-                        color="primary"
+                        className={props.classes.generalButton1}
+                        variant="outlined"
                         disabled={validForm() ? true : false}
-                        style={{ color: '#ffffff' }}
                         onClick={event => handleSubmit(event,
                             {
                                 form: {
@@ -291,11 +385,18 @@ function NewExcerciseForm(props) {
                                     length: length,
                                     content: type === "1" ? intensity : reps
                                 },
-                                name: {
-                                    id: shortid.generate(),
-                                    type: type,
-                                    name: newName
-                                }
+                                name: newName !== "" ?
+                                    {
+                                        id: shortid.generate(),
+                                        type: type,
+                                        name: newName
+                                    }
+                                    :
+                                    {
+                                        id: "",
+                                        type: "",
+                                        name: ""
+                                    }
                             }
                         )}
                     >

@@ -14,7 +14,7 @@ const InputModal = forwardRef((props, ref) => {
     }
 
     const validInput = () => {
-        if (value !== "") return true;
+        if (value !== "" && !props.excerciseNames.includes(value)) return true;
         else return false;
     }
 
