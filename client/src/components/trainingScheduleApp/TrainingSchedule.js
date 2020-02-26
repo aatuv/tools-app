@@ -65,7 +65,6 @@ function TrainingSchedule() {
             const insert = await insertExcerciseWithNewName();
             const fetche = await fetchExcercises(insert);
             const fetchn = await fetchExcerciseNames(fetche);
-            console.log(fetchn);
             setIsLoading(false);
         }
 
@@ -75,7 +74,6 @@ function TrainingSchedule() {
             const insert = await insertExcercise();
             const fetche = await fetchExcercises(insert);
             const fetchn = await fetchExcerciseNames(fetche);
-            console.log(fetchn);
             setIsLoading(false);
         }
 
@@ -84,7 +82,6 @@ function TrainingSchedule() {
             setIsLoading(true);
             const fetche = await fetchExcercises(true);
             const fetchn = await fetchExcerciseNames(fetche);
-            console.log(fetchn);
             setIsLoading(false);
         }
 
@@ -95,7 +92,6 @@ function TrainingSchedule() {
         } else {
             if (formData.form.id !== "") {
                 if (formData.name.id !== "" && excerciseNames.includes(formData.name.name) === false) {
-                    console.log("first if reached");
                     insertNameAndFetch();
                 } else {
                     insertAndFetch();

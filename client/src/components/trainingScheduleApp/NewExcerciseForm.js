@@ -43,7 +43,6 @@ function NewExcerciseForm(props) {
     const handleIntensityChange = event => setIntensity(event.target.value);
 
     const handleNameInputOpen = (event) => {
-        console.log("handler reached");
         event.stopPropagation();
         setNameInputOpen(true);
     }
@@ -178,7 +177,6 @@ function NewExcerciseForm(props) {
                             open={selectNameOpen}
                             onClose={handleSelectNameClose}
                             onOpen={handleSelectNameOpen}
-                            onMouseMove={console.log("focus selected")}
                             value={name ? name : ''}
                             onChange={handleNameChange}
                             error={name === ""}
