@@ -42,6 +42,7 @@ function NewExcerciseForm(props) {
     const handleSelectIntensityClose = () => setSelectIntensityOpen(false);
     const handleIntensityChange = event => setIntensity(event.target.value);
 
+    // handle opening, closing, errors and submitting change of the name input field
     const handleNameInputOpen = (event) => {
         event.stopPropagation();
         setNameInputOpen(true);
@@ -165,6 +166,7 @@ function NewExcerciseForm(props) {
                     <Button
                         variant="outlined"
                         className={props.classes.generalButton1}
+                        disabled={newName !== "" ? true : false}
                         onClick={handleNameInputOpen}
                     >
                         ADD NEW EXCERCISE NAME

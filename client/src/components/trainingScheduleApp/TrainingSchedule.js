@@ -10,13 +10,14 @@ function TrainingSchedule() {
     const [excercises, setExcercises] = useState([[{ id: "", weekday: "", name: "", length: "", content: "" }]]);
     const [excerciseNames, setExcerciseNames] = useState([{ name: "", type_id: "" }]);
     const [formData, setFormData] = useState(initialForm);
+    const [deleteID, setDeleteID] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const initialMount = useRef(true);
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     // fetch schedule data on initial load. Otherwise fetch whenever new excercises are added
     useEffect(() => {
-        // * define functions for fetching/inserting data
+        // * define functions for api calls
         const insertExcercise = () => {
             Axios.post('http://localhost:5000/insertExcercise', formData.form)
                 .then(response => {
@@ -57,7 +58,17 @@ function TrainingSchedule() {
                 .catch(error => {
                     console.log(error.response.data);
                 })
-        }
+        } 
+        const deleteExcercise = (id) => {
+            Axios.delete('http://localhost:5000/deleteExcercise', { data: id })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error.response.data);
+            })
+        } 
+        //define functions for api calls *
 
         // gets called, when there's a new name to be inserted with the new excercise
         const insertNameAndFetch = async () => {
@@ -75,6 +86,14 @@ function TrainingSchedule() {
             const fetche = await fetchExcercises(insert);
             const fetchn = await fetchExcerciseNames(fetche);
             setIsLoading(false);
+        }
+
+        // gets called, when excercise is about to be deleted
+
+        const deleteAndFetch = async (id) => {
+            setIsLoading(true);
+            const del = await deleteExcercise(id);
+            const fetche = await fetchExcercises(del);
         }
 
         // gets called on initial page load
@@ -101,7 +120,7 @@ function TrainingSchedule() {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formData])
+    }, [formData]) // useEffect
 
     // set new excercise form
     const handleFormData = (form) => {
