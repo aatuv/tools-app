@@ -15,8 +15,7 @@
     "react-spring": "^8.0.27",
     "shortid": "^2.2.15",
     "typeface-roboto": "0.0.75",
-    "worker-timers": "^5.1.8",
-    "write": "^2.0.0"
+    "worker-timers": "^5.1.8"
   },
   "scripts": {
     "start": "react-scripts start",
