@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import shortid from 'shortid'
 import { Modal, Button, Typography, Grid, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
-import NewExcerciseName from './newExcerciseName.js';
 
 function NewExcerciseForm(props) {
     const [open, setOpen] = useState(false);
