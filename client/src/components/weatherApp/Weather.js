@@ -71,7 +71,14 @@ function Weather() {
     let daily = [];
     for (let i = 0; i < list.length; i++) {
       let date = new Date(list[i].dt * 1000);
+      // check that date from the list is larger than current date
       if (date.getDate() > new Date(today * 1000).getDate()) {
+        if (date.getHours() === 11) {
+          daily.push(list[i]);
+        }
+      } 
+      // check if the date from the list is smaller but also if month is larger than current month
+      else if ((date.getDate() < new Date(today * 1000).getDate()) && (date.getMonth() > new Date(today * 1000).getMonth())) {
         if (date.getHours() === 11) {
           daily.push(list[i]);
         }
