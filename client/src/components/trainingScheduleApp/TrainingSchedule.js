@@ -7,12 +7,14 @@ import blue from '@material-ui/core/colors/blue'
 
 function TrainingSchedule() {
     const initialForm = { form: { id: "", weekday: "", name: "", length: "", content: "" }, name: { id: "", type: "", name: "" } };
+    const initialDeleteID = { id: "" };
     const [excercises, setExcercises] = useState([[{ id: "", weekday: "", name: "", length: "", content: "" }]]);
     const [excerciseNames, setExcerciseNames] = useState([{ name: "", type_id: "" }]);
     const [formData, setFormData] = useState(initialForm);
-    const [deleteID, setDeleteID] = useState("");
+    const [deleteID, setDeleteID] = useState(initialDeleteID);
     const [isLoading, setIsLoading] = useState(false);
-    const initialMount = useRef(true);
+    const initialMount1 = useRef(true);
+    const initialMount2 = useRef(true);
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     // fetch schedule data on initial load. Otherwise fetch whenever new excercises are added
@@ -39,10 +41,8 @@ function TrainingSchedule() {
                 });
         }
         const fetchExcercises = () => {
-            // if insert is true, inserting data was succesful and thus excercise data may be fetched
             Axios.get('http://localhost:5000/schedule')
                 .then(response => {
-                    console.log(response.data);
                     setExcercises(response.data);
                 })
                 .catch(error => {
@@ -52,22 +52,12 @@ function TrainingSchedule() {
         const fetchExcerciseNames = () => {
             Axios.get('http://localhost:5000/excerciseNames')
                 .then(response => {
-                    console.log(response.data);
                     setExcerciseNames(response.data);
                 })
                 .catch(error => {
                     console.log(error.response.data);
                 })
-        } 
-        const deleteExcercise = (id) => {
-            Axios.delete('http://localhost:5000/deleteExcercise', { data: id })
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error.response.data);
-            })
-        } 
+        }
         //define functions for api calls *
 
         // gets called, when there's a new name to be inserted with the new excercise
@@ -88,14 +78,6 @@ function TrainingSchedule() {
             setIsLoading(false);
         }
 
-        // gets called, when excercise is about to be deleted
-
-        const deleteAndFetch = async (id) => {
-            setIsLoading(true);
-            const del = await deleteExcercise(id);
-            const fetche = await fetchExcercises(del);
-        }
-
         // gets called on initial page load
         const fetch = async () => {
             setIsLoading(true);
@@ -105,8 +87,8 @@ function TrainingSchedule() {
         }
 
         // handle logic to insert and fetch data properly
-        if (initialMount.current) {
-            initialMount.current = false;
+        if (initialMount1.current) {
+            initialMount1.current = false;
             fetch();
         } else {
             if (formData.form.id !== "") {
@@ -122,9 +104,62 @@ function TrainingSchedule() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formData]) // useEffect
 
+    useEffect(() => {
+        if (initialMount2.current) {
+            initialMount2.current = false;
+        } else {
+            const deleteExcercise = () => {
+                Axios.delete('http://localhost:5000/deleteExcercise', {
+                    params: {
+                        id: deleteID
+                    }
+                })
+                    .then(response => {
+                        console.log(response.data);
+                        setDeleteID(initialDeleteID);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            }
+            const fetchExcercises = () => {
+                Axios.get('http://localhost:5000/schedule')
+                    .then(response => {
+                        console.log(response.data);
+                        setExcercises(response.data);
+                    })
+                    .catch(error => {
+                        console.log(error.response.data);
+                    });
+            }
+
+            // gets called, when excercise is about to be deleted
+            const deleteAndFetch = async () => {
+                setIsLoading(true);
+                const del = await deleteExcercise();
+                const fetche = await fetchExcercises(del);
+                setIsLoading(false);
+            }
+            const fetch = async () => {
+                setIsLoading(true);
+                const fetche = await fetchExcercises();
+                setIsLoading(false);
+            }
+            if (deleteID.id !== "") {
+                deleteAndFetch();
+            } else {
+                fetch();
+            }
+        }
+    }, [deleteID]); // useEffect
+
     // set new excercise form
     const handleFormData = (form) => {
         setFormData(form);
+    }
+
+    const handleDeleteID = (id) => {
+        setDeleteID(id);
     }
 
     // css properties for the components
@@ -227,6 +262,7 @@ function TrainingSchedule() {
                 excerciseNames={excerciseNames}
                 classes={classes}
                 handleFormData={handleFormData}
+                handleDeleteID={handleDeleteID}
             />
         </Paper>
 }

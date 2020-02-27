@@ -57,9 +57,10 @@ const updateExcercise = (req, res) => {
 }
 // router.route(/deleteExcercise).delete()
 const deleteExcercise = (req, res) => {
+    console.log(JSON.parse(req.query.id).id);
     connection.query(
         `DELETE FROM excercise
-            WHERE id = ?`, [req.body.id],
+            WHERE id = ?`, [JSON.parse(req.query.id).id],
         (error, results, fields) => {
             if (error) throw error;
             else {

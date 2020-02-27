@@ -30,7 +30,7 @@ function TrainingDay(props) {
                 classes={props.classes}
                 excerciseNames={props.excerciseNames}
                 handleFormData={props.handleFormData}
-                handleNameData={props.handleNameData}
+                handleDeleteID={props.handleDeleteID}
             />
         </Paper>
     )
