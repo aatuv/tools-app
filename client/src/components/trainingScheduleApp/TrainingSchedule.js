@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Axios from 'axios'
-import { Paper, CircularProgress } from '@material-ui/core'
+import { Snackbar, Paper, CircularProgress } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
 import Weekdays from './Weekdays.js'
 import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
@@ -15,6 +16,13 @@ function TrainingSchedule() {
     const [editFormData, setEditFormData] = useState(initialForm);
     const [deleteID, setDeleteID] = useState(initialDeleteID);
     const [isLoading, setIsLoading] = useState(false);
+    const [fetchFailure, setFetchFailure] = useState(false);
+    const [addSuccess, setAddSuccess] = useState(false);
+    const [addFailure, setAddFailure] = useState(false);
+    const [editSuccess, setEditSuccess] = useState(false);
+    const [editFailure, setEditFailure] = useState(false);
+    const [deleteSuccess, setDeleteSuccess] = useState(false);
+    const [deleteFailure, setDeleteFailure] = useState(false);
     const initialMount1 = useRef(true);
     const initialMount2 = useRef(true);
     const initialMount3 = useRef(true);
@@ -31,6 +39,7 @@ function TrainingSchedule() {
                 })
                 .catch(error => {
                     console.lof(error.response.data);
+                    setAddFailure(true);
                 });
         }
         const insertExcerciseWithNewName = () => {
@@ -41,6 +50,7 @@ function TrainingSchedule() {
                 })
                 .catch(error => {
                     console.lof(error.response.data);
+                    setAddFailure(true);
                 });
         }
         const fetchExcercises = () => {
@@ -50,6 +60,7 @@ function TrainingSchedule() {
                 })
                 .catch(error => {
                     console.log(error.response.data);
+                    setFetchFailure(true);
                 });
         }
         const fetchExcerciseNames = () => {
@@ -59,6 +70,7 @@ function TrainingSchedule() {
                 })
                 .catch(error => {
                     console.log(error.response.data);
+                    setFetchFailure(true);
                 })
         }
         //define functions for api calls *
@@ -70,6 +82,7 @@ function TrainingSchedule() {
             const fetche = await fetchExcercises(insert);
             const fetchn = await fetchExcerciseNames(fetche);
             setIsLoading(false);
+            setAddSuccess(true);
         }
 
         // gets called, when there's a new excercise to be inserted
@@ -79,6 +92,7 @@ function TrainingSchedule() {
             const fetche = await fetchExcercises(insert);
             const fetchn = await fetchExcerciseNames(fetche);
             setIsLoading(false);
+            setAddSuccess(true);
         }
 
         // gets called on initial page load
@@ -117,6 +131,7 @@ function TrainingSchedule() {
                 })
                 .catch(error => {
                     console.lof(error.response.data);
+                    setEditFailure(true);
                 });
         }
         const fetchExcercises = () => {
@@ -126,6 +141,7 @@ function TrainingSchedule() {
                 })
                 .catch(error => {
                     console.log(error.response.data);
+                    setFetchFailure(true);
                 });
         }
         //define functions for api calls *
@@ -136,6 +152,7 @@ function TrainingSchedule() {
             const edit = await editExcercise();
             const fetche = await fetchExcercises(edit);
             setIsLoading(false);
+            setEditSuccess(true);
         }
         const fetch = async () => {
             setIsLoading(true);
@@ -169,6 +186,7 @@ function TrainingSchedule() {
                     })
                     .catch(error => {
                         console.log(error);
+                        setDeleteFailure(true);
                     })
             }
             const fetchExcercises = () => {
@@ -179,6 +197,7 @@ function TrainingSchedule() {
                     })
                     .catch(error => {
                         console.log(error.response.data);
+                        setFetchFailure(true);
                     });
             }
 
@@ -188,6 +207,7 @@ function TrainingSchedule() {
                 const del = await deleteExcercise();
                 const fetche = await fetchExcercises(del);
                 setIsLoading(false);
+                setDeleteSuccess(true);
             }
             const fetch = async () => {
                 setIsLoading(true);
@@ -318,6 +338,58 @@ function TrainingSchedule() {
                 handleDeleteID={handleDeleteID}
                 handleEditExcercise={handleEditExcercise}
             />
+            {
+                // show feedback wether user action is succesful or not
+            }
+            <Snackbar
+                open={fetchFailure}
+                autoHideDuration={3000}
+                onClose={() => setFetchFailure(false)}
+            >
+                <Alert severity="error">An error occured while fetching excercise schedule data</Alert>
+            </Snackbar>
+            <Snackbar
+                open={addSuccess}
+                autoHideDuration={3000}
+                onClose={() => setAddSuccess(false)}
+            >
+                <Alert severity="success">Excercise added succesfully!</Alert>
+            </Snackbar>
+            <Snackbar
+                open={addFailure}
+                autoHideDuration={3000}
+                onClose={() => setAddFailure(false)}
+            >
+                <Alert severity="error">An error occured while adding an excercise</Alert>
+            </Snackbar>
+            <Snackbar
+                open={editSuccess}
+                autoHideDuration={3000}
+                onClose={() => setEditSuccess(false)}
+            >
+                <Alert severity="success">Excercise information updated succesfully!</Alert>
+            </Snackbar>
+            <Snackbar
+                open={editFailure}
+                autoHideDuration={3000}
+                onClose={() => setEditFailure(false)}
+            >
+                <Alert severity="error">An error occured while updating the excercise</Alert>
+            </Snackbar>
+            <Snackbar
+                open={deleteSuccess}
+                autoHideDuration={3000}
+                onClose={() => setDeleteSuccess(false)}
+            >
+                <Alert severity="success">Excercise deleted succesfully!</Alert>
+            </Snackbar>
+            <Snackbar
+                open={deleteFailure}
+                autoHideDuration={3000}
+                onClose={() => setDeleteFailure(false)}
+            >
+                <Alert severity="error">An error occured while adding an excercise</Alert>
+            </Snackbar>
         </Paper>
 }
 
