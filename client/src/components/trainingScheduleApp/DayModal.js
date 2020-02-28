@@ -18,12 +18,27 @@ function DayModal(props) {
         return props.data.list.map((row) => (
             <Grid item xs={12} key={row.id}>
                 <Paper className={props.classes.dayPaper}>
-                    <Typography variant="h6">{row.name}, {row.length}x{row.content}</Typography>
-                    <EditExcerciseForm 
-                    data={row}
-                    classes={props.classes}
-                    excerciseNames={props.excerciseNames}
-                    handleEditExcercise={props.handleEditExcercise}
+                    {
+                        row.type === "Stamina" ?
+                            <div>
+                                <Typography variant="h6">{row.name}</Typography>
+                                <Typography variant="body1">Type: {row.type}</Typography>
+                                <Typography variant="body1">Minutes: {row.length}</Typography>
+                                <Typography variant="body1">Intensity: {row.content}</Typography>
+                            </div>
+                            :
+                            <div>
+                                <Typography variant="h6">{row.name}</Typography>
+                                <Typography variant="body1">Type: {row.type}</Typography>
+                                <Typography variant="body1">Sets: {row.length}</Typography>
+                                <Typography variant="body1">Reps: {row.content}</Typography>
+                            </div>
+                    }
+                    <EditExcerciseForm
+                        data={row}
+                        classes={props.classes}
+                        excerciseNames={props.excerciseNames}
+                        handleEditExcercise={props.handleEditExcercise}
                     >
 
                     </EditExcerciseForm>
@@ -33,7 +48,7 @@ function DayModal(props) {
                             {
                                 id: row.id
                             }
-                            )}
+                        )}
                         variant="outlined"
                     >
                         Delete

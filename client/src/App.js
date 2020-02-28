@@ -15,10 +15,10 @@ function App() {
             <Weather />
           </Grid>
           <Grid item xs={4}>
-            <Timer />
+            <Clock />
           </Grid>
           <Grid item xs={4}>
-            <Clock />
+            <Timer />
           </Grid>
         </Grid>
       </Fragment>
@@ -26,13 +26,13 @@ function App() {
   }
 
   return (
-    <Grid container style={{ backgroundColor: blue[800], minHeight: '100vh', minWidth: '100vh'}} direction="column" spacing={6}>
+    <Grid container style={{ backgroundColor: blue[800], minHeight: '100vh', minWidth: '100vh' }} direction="column" spacing={6}>
       <Grid item xs={12}>
         {gridRow()}
       </Grid>
       <Grid item xs={12}>
         <Fragment>
-        <TrainingSchedule />
+          <TrainingSchedule />
         </Fragment>
       </Grid>
     </Grid>

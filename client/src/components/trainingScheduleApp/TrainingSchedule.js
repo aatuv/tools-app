@@ -299,7 +299,7 @@ function TrainingSchedule() {
             color: '#ffffff'
         },
         declineButton: {
-            backgroundColor: '#f44336',
+            backgroundColor: '#e57373',
             color: '#ffffff'
         },
         formControl: {
