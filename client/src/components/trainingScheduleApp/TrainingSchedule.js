@@ -7,14 +7,17 @@ import blue from '@material-ui/core/colors/blue'
 
 function TrainingSchedule() {
     const initialForm = { form: { id: "", weekday: "", name: "", length: "", content: "" }, name: { id: "", type: "", name: "" } };
+    const initialEditForm = { id: "", weekday: "", name: "", length: "", content: "" };
     const initialDeleteID = { id: "" };
     const [excercises, setExcercises] = useState([[{ id: "", weekday: "", name: "", length: "", content: "" }]]);
     const [excerciseNames, setExcerciseNames] = useState([{ name: "", type_id: "" }]);
     const [formData, setFormData] = useState(initialForm);
+    const [editFormData, setEditFormData] = useState(initialForm);
     const [deleteID, setDeleteID] = useState(initialDeleteID);
     const [isLoading, setIsLoading] = useState(false);
     const initialMount1 = useRef(true);
     const initialMount2 = useRef(true);
+    const initialMount3 = useRef(true);
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     // fetch schedule data on initial load. Otherwise fetch whenever new excercises are added
@@ -105,6 +108,52 @@ function TrainingSchedule() {
     }, [formData]) // useEffect
 
     useEffect(() => {
+        // * define functions for api calls
+        const editExcercise = () => {
+            Axios.post('http://localhost:5000/updateExcercise', editFormData)
+                .then(response => {
+                    console.log(response.data);
+                    setEditFormData(initialEditForm);
+                })
+                .catch(error => {
+                    console.lof(error.response.data);
+                });
+        }
+        const fetchExcercises = () => {
+            Axios.get('http://localhost:5000/schedule')
+                .then(response => {
+                    setExcercises(response.data);
+                })
+                .catch(error => {
+                    console.log(error.response.data);
+                });
+        }
+        //define functions for api calls *
+
+        // gets called, when there's a new excercise to be inserted
+        const editAndFetch = async () => {
+            setIsLoading(true);
+            const edit = await editExcercise();
+            const fetche = await fetchExcercises(edit);
+            setIsLoading(false);
+        }
+        const fetch = async () => {
+            setIsLoading(true);
+            const fetche = await fetchExcercises();
+            setIsLoading(false);
+        }
+        // handle logic to insert and fetch data properly
+        if (initialMount3.current) {
+            initialMount3.current = false;
+        } else {
+            if (editFormData.id !== "") {
+                editAndFetch();
+            } else fetch();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editFormData]) // useEffect
+
+    useEffect(() => {
         if (initialMount2.current) {
             initialMount2.current = false;
         } else {
@@ -156,6 +205,10 @@ function TrainingSchedule() {
     // set new excercise form
     const handleFormData = (form) => {
         setFormData(form);
+    }
+
+    const handleEditExcercise = (form) => {
+        setEditFormData(form);
     }
 
     const handleDeleteID = (id) => {
@@ -263,6 +316,7 @@ function TrainingSchedule() {
                 classes={classes}
                 handleFormData={handleFormData}
                 handleDeleteID={handleDeleteID}
+                handleEditExcercise={handleEditExcercise}
             />
         </Paper>
 }

@@ -29,6 +29,7 @@ function Weekdays(props) {
                     classes={props.classes}
                     handleFormData={props.handleFormData}
                     handleDeleteID={props.handleDeleteID}
+                    handleEditExcercise={props.handleEditExcercise}
                 />
             </Grid>
         ));

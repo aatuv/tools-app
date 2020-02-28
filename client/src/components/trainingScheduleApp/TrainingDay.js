@@ -31,6 +31,7 @@ function TrainingDay(props) {
                 excerciseNames={props.excerciseNames}
                 handleFormData={props.handleFormData}
                 handleDeleteID={props.handleDeleteID}
+                handleEditExcercise={props.handleEditExcercise}
             />
         </Paper>
     )

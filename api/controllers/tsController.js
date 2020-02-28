@@ -47,7 +47,7 @@ const updateExcercise = (req, res) => {
                 WHERE name = ?), 
                 length = ?, 
                 content = ?
-            WHERE id = ?`, [req.body.weekday, req.body.name, req.body.length, req.body.content],
+            WHERE id = ?`, [req.body.weekday, req.body.name, req.body.length, req.body.content, req.body.id],
         (error, results, fields) => {
             if (error) throw error;
             else {

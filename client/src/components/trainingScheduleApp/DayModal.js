@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, Button, Typography, Grid, Paper } from '@material-ui/core'
 import NewExcerciseForm from './NewExcerciseForm.js'
+import EditExcerciseForm from './EditExcerciseForm.js'
 
 function DayModal(props) {
     const [open, setOpen] = useState(false);
@@ -18,11 +19,14 @@ function DayModal(props) {
             <Grid item xs={12} key={row.id}>
                 <Paper className={props.classes.dayPaper}>
                     <Typography variant="h6">{row.name}, {row.length}x{row.content}</Typography>
-                    <Button
-                        className={props.classes.generalButton2}
-                        variant="outlined"
-                    >Edit
-                    </Button>
+                    <EditExcerciseForm 
+                    data={row}
+                    classes={props.classes}
+                    excerciseNames={props.excerciseNames}
+                    handleEditExcercise={props.handleEditExcercise}
+                    >
+
+                    </EditExcerciseForm>
                     <Button
                         className={props.classes.declineButton}
                         onClick={() => props.handleDeleteID(
